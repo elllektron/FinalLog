@@ -1,0 +1,6 @@
+﻿namespace FinalLog
+{
+    class RunRemarks
+    {
+    }
+}
