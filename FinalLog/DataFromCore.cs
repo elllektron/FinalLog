@@ -21,7 +21,7 @@ namespace FinalLog
         }
 
         const double feetToMeter = 3.28084;
-        const double feetToMillimeter = 304.8;
+        const double feetToMillimeter = 25.4;
         const double ppgToGcc = 8.34;
 
         private readonly string _wellName;
@@ -278,7 +278,7 @@ namespace FinalLog
                                 if (bit.Item(k).Name == "TFA")
                                 {
                                     if (bit.Item(k).InnerText != "")
-                                        _nozzlessSquare.Add(runNumber, double.Parse(bit.Item(k).InnerText) * feetToMillimeter);
+                                        _nozzlessSquare.Add(runNumber, Math.Pow(Math.Sqrt(double.Parse(bit.Item(k).InnerText)) * feetToMillimeter, 2));
                                 }
 
                                 if (bit.Item(k).Name == "Type")

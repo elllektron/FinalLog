@@ -42,6 +42,7 @@ namespace FinalLog
         {
             DataFromCore data = new(_wellName, _runs, _coreFile, _wellType, _mudType);
             string _fileExelPath = "Data\\Header.xlsm";
+            string _fileExelPathDebug = "FinalLog\\Data\\Header.xlsm";
             string currentDirectory = Directory.GetCurrentDirectory();
             var temp = currentDirectory.Split('\\');
             string fullPath = "";
@@ -49,7 +50,10 @@ namespace FinalLog
             {
                 if (temp[i] == "FinalLog")
                 {
-                    fullPath += Path.Combine(temp[i], _fileExelPath);
+                    if(temp[i + 1] == "FinalLog")
+                        fullPath += Path.Combine(temp[i], _fileExelPathDebug);
+                    else
+                        fullPath += Path.Combine(temp[i], _fileExelPath);
                     break;
                 }
                 else

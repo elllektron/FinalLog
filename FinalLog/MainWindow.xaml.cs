@@ -45,7 +45,15 @@ namespace FinalLog
         private XmlNodeList wellNames;
         private XmlNodeList runNumbers;
         private List<string> wellTypes = new() { "Пилотный ствол", "Транспортный ствол", "Горизонтальный ствол" };
-        private List<string> mudTypes = new() { "Полимер-глинистый", "Полимерный", "Глинистый", "РУО", "Биополимерный KCL", "Пресный ингибированный"};
+        private List<string> mudTypes = new() { 
+            "Полимер-глинистый", 
+            "Полимерный", 
+            "Глинистый", 
+            "РУО", 
+            "Биополимерный KCL", 
+            "Пресный ингибированный",
+            "Полимер-карбонатный инкапсулирующий"
+        };
 
         private List<string> activitys = new() { "бурение/запись", "бурение" };
 

@@ -19,6 +19,7 @@ namespace FinalLog
         private void CompleteHederInfo()
         {
             Worksheet worksheet = (Worksheet)_workbook.Sheets["Header Info"];
+            //Очищаем ячейки
             for (int i = 0; i < 8; i++)
             {
                 worksheet.Rows[27 + i] = "";
@@ -26,18 +27,29 @@ namespace FinalLog
             }
 
 
-
+            //номер скважины
             worksheet.Cells[3, "B"] = $"{_data.WellName}#{_data.PadName} {_data.WellType}";
+            //тип скважины
             worksheet.Cells[4, "B"] = _data.WellType;
+            //Название месторождения
             worksheet.Cells[5, "B"] = _data.FieldName;
+            //Тип буровой
             worksheet.Cells[6, "B"] = _data.RigType;
+            //Номер работы
             worksheet.Cells[8, "B"] = _data.JobNumber;
+            //Альтитуда
             worksheet.Cells[13, "B"] = $"{_data.SSTVD:f2} м";
+            //Конечный забой
             worksheet.Cells[16, "B"] = $"{_data.EndMD:f2} м";
+            //Диаметр скважины
             worksheet.Cells[17, "B"] = $"{_data.HoleSize:f1} мм";
+            //Начальный забой
             worksheet.Cells[18, "B"] = $"{_data.StartMD:f2} м";
+            //Дата начала бурения
             worksheet.Cells[20, "B"] = $"{_data.StartDateHeader}";
+            //Дата конца бурения
             worksheet.Cells[21, "B"] = $"{_data.EndDateHeader}";
+            //Количество рейсов
             worksheet.Cells[22, "B"] = _data.RunCount;
 
 
