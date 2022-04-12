@@ -7,7 +7,6 @@ namespace FinalLog
     {
         private readonly Workbook _workbook;
         private readonly DataFromCore _data;
-        //private readonly string _welltype;
 
         public HeaderInfo(Workbook workbook, DataFromCore data)
         {
@@ -48,7 +47,9 @@ namespace FinalLog
             //Дата начала бурения
             worksheet.Cells[20, "B"] = $"{_data.StartDateHeader}";
             //Дата конца бурения
-            worksheet.Cells[21, "B"] = $"{_data.EndDateHeader}";
+            worksheet.Cells[21, "B"] = $"{_data.EndDateRuns[_data.RunNumbers[_data.RunCount - 1]]}";
+            
+            
             //Количество рейсов
             worksheet.Cells[22, "B"] = _data.RunCount;
 

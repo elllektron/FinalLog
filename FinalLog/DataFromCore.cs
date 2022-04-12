@@ -21,7 +21,8 @@ namespace FinalLog
         }
 
         const double feetToMeter = 3.28084;
-        const double feetToMillimeter = 25.4;
+        const double inchToMillimeter = 25.4;
+        const double feetToMillimeter = 304.8;
         const double ppgToGcc = 8.34;
 
         private readonly string _wellName;
@@ -235,7 +236,7 @@ namespace FinalLog
                             StartDepthRuns.Add(runNumber, double.Parse(item) / feetToMeter);
                             break;
                         case "Out_Hole_Date":
-                            EndDateRuns.Add(runNumber, item);
+                            //EndDateRuns.Add(runNumber, item);
                             break;
                         case "Out_Hole_MD":
                             EndDepthRuns.Add(runNumber, double.Parse(item, CultureInfo.InvariantCulture) / feetToMeter);
@@ -278,7 +279,7 @@ namespace FinalLog
                                 if (bit.Item(k).Name == "TFA")
                                 {
                                     if (bit.Item(k).InnerText != "")
-                                        _nozzlessSquare.Add(runNumber, Math.Pow(Math.Sqrt(double.Parse(bit.Item(k).InnerText)) * feetToMillimeter, 2));
+                                        _nozzlessSquare.Add(runNumber, Math.Pow(Math.Sqrt(double.Parse(bit.Item(k).InnerText)) * inchToMillimeter, 2));
                                 }
 
                                 if (bit.Item(k).Name == "Type")
@@ -536,6 +537,10 @@ namespace FinalLog
                                     {
                                         string tempDate = dailies.Item(k).ChildNodes.Item(l).InnerText;
                                         tempList.Add(tempDate);
+                                        if(k == dailies.Count - 2)
+                                        {
+                                            EndDateRuns.Add(runNumber, tempDate);
+                                        }
                                     }
                                     if (dailies.Item(k).ChildNodes.Item(l).Name == "End_MD")
                                     {
@@ -586,7 +591,7 @@ namespace FinalLog
                                 }
                             }
                             DailyMudSum.Add(runNumber, tempDailyDepth);
-                            //DailyMudWeight.Add(runNumber, tempListMudWeight);
+                            
                             break;
                         default:
                             break;

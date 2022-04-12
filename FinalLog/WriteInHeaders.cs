@@ -10,7 +10,6 @@ namespace FinalLog
 {
     class WriteInHeaders
     {
-        //private readonly string _fileExelPath = @"FinalLog\Data\Header.xlsm";
         private readonly string _wellName;
         private readonly List<string> _runs;
         private readonly XmlDocument _coreFile;
