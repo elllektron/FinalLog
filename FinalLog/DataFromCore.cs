@@ -882,8 +882,8 @@ namespace FinalLog
             }
             if (minutes.Length < 2)
                 minutes += "0";
-            parseMinutes = double.Parse(minutes) * 0.6;
-
+            parseMinutes = Math.Round(double.Parse(minutes) * 0.6);
+        
             string result = $"{hours}:{parseMinutes}";
             return result;
         }
