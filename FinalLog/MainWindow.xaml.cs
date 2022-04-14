@@ -57,7 +57,7 @@ namespace FinalLog
 
         private List<string> activitys = new() { "бурение/запись", "бурение" };
 
-
+        public string Version { get; set; }
         public string FileName { get; set; }
         public string WellName { get; set; }
         public List<string> RunNumbers { get; set; } = new List<string>();
@@ -72,9 +72,12 @@ namespace FinalLog
 
         public MainWindow()
         {
+            CheckVersionForUpdate();
             InitializeComponent();
+            
             MessageBoxButton button = MessageBoxButton.OK;
             MessageBox.Show(messageBoxText, caption, button);
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -164,10 +167,7 @@ namespace FinalLog
                 worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
                 worker.RunWorkerAsync();
             }
-            else
-            {
 
-            }
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -214,6 +214,14 @@ namespace FinalLog
                     }
                 }
             }
+        }
+
+
+        private void CheckVersionForUpdate()
+        {
+            var version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+            Title = $"Final Log  v {version}";
+
         }
     }
 }

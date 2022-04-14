@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinalLog"
         mc:Ignorable="d"
-        Title="Final Log    v 0.0.1   developed by elllektron" Height="450" Width="420" WindowStartupLocation="CenterScreen">
+        Height="450" Width="420" WindowStartupLocation="CenterScreen">
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBar.ItemsPanel>
