@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
@@ -14,8 +16,7 @@ namespace FinalLog
     /// </summary>
     public partial class MainWindow : Window
     {
-       
-        
+
         string messageBoxText = "Перед использованием программы убедитесь в правильности заполнения данных Core!" +
             "\n ОЧЕНЬ ВАЖНО НЕ ПЕРЕНОСИТЬ И НЕ УДАЛЯТЬ ФАЙЛ Header.xlsm" +
             "\n ПОСЛЕ ЗАВЕРШЕНИЯ ВЫПОЛНЕНИЯ ПРОГРАММЫ В ОТКРЫВШЕМСЯ ФАЙЛЕ EXCEL НАЖИМАЕМ СОХРАНИТЬ КАК И ВЫБИРАЕМ НУЖНОЕ МЕСТО" +
@@ -68,13 +69,11 @@ namespace FinalLog
         public int ProgressBarValue { get; set; }
 
 
-
-
         public MainWindow()
         {
-            CheckVersionForUpdate();
             InitializeComponent();
-            
+            CheckVersionForUpdate();
+
             MessageBoxButton button = MessageBoxButton.OK;
             MessageBox.Show(messageBoxText, caption, button);
             
@@ -167,7 +166,6 @@ namespace FinalLog
                 worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
                 worker.RunWorkerAsync();
             }
-
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -219,9 +217,38 @@ namespace FinalLog
 
         private void CheckVersionForUpdate()
         {
-            var version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
-            Title = $"Final Log  v {version}";
+            HttpWebResponse response;
+            string newVersion;
+            string updateVersionTextBoxMessage = "Доступна новая версия программы. \n Вы хотите её обновить?";
+            string updateVersionTextCaption = "Доступно обновление";
 
+
+
+            //Получаем текущую версию программы
+            string version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+            string currentVersion = $"v{version.Remove(version.Length - 2)}"; 
+            //Устанавливаем версию в title
+            Title = $"Final Log  v {version}";
+       
+            //Проверяем есть ли новая версия на сервере
+            string url = $"https://github.com/elllektron/FinalLog/releases/latest";
+            var uri = WebRequest.Create(url);
+            try
+            {
+                response = (HttpWebResponse)uri.GetResponse();
+                var responseList = response.ResponseUri.ToString().Split('/');
+                newVersion = responseList[^1];
+                if(currentVersion != newVersion)
+                {
+                    MessageBoxButton buttonYesNo = MessageBoxButton.YesNo;
+                    MessageBox.Show(updateVersionTextBoxMessage, updateVersionTextCaption, buttonYesNo);
+                }
+
+            }
+            catch (WebException we)
+            {
+                statusText.Text = ((HttpWebResponse)we.Response).StatusCode.ToString();
+            }      
         }
     }
 }
