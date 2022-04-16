@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Windows;
@@ -170,6 +171,7 @@ namespace FinalLog
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            string currentDirectory = Directory.GetCurrentDirectory();
             statusText.Text = "Готово";
             btnStart.IsEnabled = true;
         }

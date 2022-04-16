@@ -1,6 +1,4 @@
 ﻿using Microsoft.Office.Interop.Excel;
-using Microsoft.Win32;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -49,18 +47,22 @@ namespace FinalLog
             {
                 if (temp[i] == "FinalLog")
                 {
-                    if(temp[i + 1] == "FinalLog")
-                        fullPath += Path.Combine(temp[i], _fileExelPathDebug);
-                    else
+                    if (i == temp.Length - 1)
+                    {
                         fullPath += Path.Combine(temp[i], _fileExelPath);
-                    break;
+                        break;
+                    }
+                    else
+                    {
+                        fullPath += Path.Combine(temp[i], _fileExelPathDebug);
+                        break;
+                    }
                 }
                 else
                 {
                     fullPath += temp[i] + "\\";
                 }
             }
-
             Application application = new();
 
 
@@ -92,7 +94,7 @@ namespace FinalLog
                 _worker.ReportProgress(90, statusString);
 
                 application.Visible = true;
-                
+
             }
             catch
             {
@@ -101,7 +103,7 @@ namespace FinalLog
                 workbook.Close(true);
                 application.Quit();
             }
-            
+
         }
     }
 }
