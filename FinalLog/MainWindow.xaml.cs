@@ -224,13 +224,11 @@ namespace FinalLog
             string updateVersionTextBoxMessage = "Доступна новая версия программы. \n Вы хотите её обновить?";
             string updateVersionTextCaption = "Доступно обновление";
 
-
-
             //Получаем текущую версию программы
             string version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
             string currentVersion = $"v{version.Remove(version.Length - 2)}"; 
             //Устанавливаем версию в title
-            Title = $"Final Log  v {version}";
+            Title = $"Final Log {currentVersion}";
        
             //Проверяем есть ли новая версия на сервере
             string url = $"https://github.com/elllektron/FinalLog/releases/latest";
