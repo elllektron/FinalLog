@@ -72,22 +72,16 @@ namespace FinalLog
                 worksheet.Cells[38 + num, "G"] = $"{item.Value.Max():f1} м";
                 num++;
             }
-
-
-            for (int i = 0; i < _data.CasingShoeDepth.Count; i++)
+            num = 0;
+            foreach (var item in _data.CasingShoeDepthDict)
             {
-                if (_data.CasingShoeSize.Count > i)
-                {
-                    if (_data.CasingShoeSize[i] > _data.HoleSize)
-                    {
-                        worksheet.Cells[27 + i, "D"] = $"{_data.CasingShoeSize[i]:f1} мм";
-                        worksheet.Cells[27 + i, "E"] = "-";
-                        worksheet.Cells[27 + i, "F"] = "0.0 м";
-                        worksheet.Cells[27 + i, "G"] = $"{_data.CasingShoeDepth[i]:f1} м";
-                    }
-                }
-
+                worksheet.Cells[27 + num, "D"] = $"{item.Key:f1} мм";
+                worksheet.Cells[27 + num, "E"] = "-";
+                worksheet.Cells[27 + num, "F"] = "0.0 м";
+                worksheet.Cells[27 + num, "G"] = $"{item.Value:f1} м";
+                num++;
             }
+
 
             num = 0;
             foreach (var item in _data.MaxIncOfHoleSize)

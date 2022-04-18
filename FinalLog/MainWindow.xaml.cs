@@ -238,11 +238,18 @@ namespace FinalLog
                 response = (HttpWebResponse)uri.GetResponse();
                 var responseList = response.ResponseUri.ToString().Split('/');
                 newVersion = responseList[^1];
-                if(currentVersion != newVersion)
+                if (currentVersion != newVersion)
                 {
+                    
                     MessageBoxButton buttonYesNo = MessageBoxButton.YesNo;
-                    MessageBox.Show(updateVersionTextBoxMessage, updateVersionTextCaption, buttonYesNo);
+                    MessageBoxResult result =  MessageBox.Show(updateVersionTextBoxMessage, updateVersionTextCaption, buttonYesNo);
+
+                    if(result == MessageBoxResult.Yes)
+                    {
+                        //TODO: Запускаем программу обновления.
+                    }
                 }
+                
 
             }
             catch (WebException we)

@@ -76,7 +76,13 @@ namespace FinalLog
         public string StartDateHeader { get; set; }
         public string EndDateHeader { get; set; }
         public int RunCount { get; set; }
-        public List<double> CasingShoeSize { get; set; } = new List<double>() { 324, 245, 178 };
+        public Dictionary<double, double> CasingShoeSize { get; set; } = new Dictionary<double, double>()
+        { 
+            {393.7, 324 },
+            {295.3, 245 },
+            {220.7, 178 },  
+        };
+        public Dictionary<double, double> CasingShoeDepthDict { get; set; } = new Dictionary<double, double>();
         public List<double> CasingShoeDepth { get; set; } = new List<double>();
         public Dictionary<string, double> StartDepthRuns { get; set; } = new Dictionary<string, double>();
         public Dictionary<string, double> EndDepthRuns { get; set; } = new Dictionary<string, double>();
@@ -151,7 +157,7 @@ namespace FinalLog
             GetEndDateHeader();
             GetHolesizeofDepth();
             GetDataFromCurrentRuns();
-
+            CasingShoeDepthCompare();
 
         }
 
@@ -273,7 +279,7 @@ namespace FinalLog
                                 if (bit.Item(k).Name == "Size")
                                 {
                                     holeSize = double.Parse(bit.Item(k).InnerText);
-                                    HoleSizeRuns.Add(runNumber, holeSize * feetToMillimeter);
+                                    HoleSizeRuns.Add(runNumber, Math.Round(holeSize * feetToMillimeter, 1));
                                 }
 
                                 if (bit.Item(k).Name == "TFA")
@@ -945,5 +951,33 @@ namespace FinalLog
             return temp;
         }
 
+        private void CasingShoeDepthCompare()
+        {
+            var tempList = new List<double>();
+            
+            foreach (var item in HoleSizeRuns)
+            {
+                if(!tempList.Contains(item.Value))
+                    tempList.Add(item.Value);
+                
+            }
+
+            foreach (var item in CasingShoeSize)
+            {
+                if(item.Key > HoleSize)
+                {
+                    for (int i = 0; i < tempList.Count; i++)
+                    {
+                        if (item.Key == tempList[i])
+                        {
+                            CasingShoeDepthDict.Add(item.Value, CasingShoeDepth[i]);
+                            break;
+                        }
+                    }
+                }
+                
+            }
+
+        }
     }
 }
