@@ -65,13 +65,16 @@ namespace FinalLog
                 num++;
             }
 
+            //Записи о скважине
             num = 0;
             foreach (var item in _data.EndDepthOfHoleSize)
             {
-                worksheet.Cells[27 + num, "C"] = $"{item.Value.Max():f1} м";
+                worksheet.Cells[27 + num, "C"] = $"{item.Value.Last():f1} м";
                 worksheet.Cells[38 + num, "G"] = $"{item.Value.Max():f1} м";
                 num++;
             }
+
+            //Записи об обсадной колонне
             num = 0;
             foreach (var item in _data.CasingShoeDepthDict)
             {
