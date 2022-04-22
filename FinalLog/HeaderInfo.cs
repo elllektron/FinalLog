@@ -89,14 +89,14 @@ namespace FinalLog
             num = 0;
             foreach (var item in _data.MaxIncOfHoleSize)
             {
-                worksheet.Cells[38 + num, "C"] = $"{item.Value.Min():f1}°";
+                worksheet.Cells[38 + num, "C"] = $"{item.Value.Last()}°";
                 num++;
             }
 
             num = 0;
             foreach (var item in _data.MinIncOfHoleSize)
             {
-                worksheet.Cells[38 + num, "B"] = $"{item.Value.Min():f1}°";
+                worksheet.Cells[38 + num, "B"] = $"{item.Value.Last()}°";
                 num++;
             }
 

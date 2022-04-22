@@ -1,19 +1,20 @@
-﻿<Window x:Class="UpdateFinalLog.MainWindow"
+﻿<Window x:Class="FinalLog.LoadWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UpdateFinalLog"
+        xmlns:local="clr-namespace:FinalLog"
         mc:Ignorable="d"
-        Title="MainWindow" Height="150" Width="800">
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Height="120" Width="300">
     <Grid>
         <StackPanel>
-            <StatusBarItem>
-                <TextBlock x:Name="statusText"/>
+            <StatusBarItem HorizontalAlignment="Center">
+                <TextBlock x:Name="statusText" Text="Выполняется загурзка..." TextAlignment="Center"/>
             </StatusBarItem>
             <StatusBar>
                 <StatusBarItem>
-                    <ProgressBar x:Name="progressBar" Value="1" Width="Auto" Height="100">
+                    <ProgressBar x:Name="progressBar" Value="1" Width="265" Height="30" Margin="5">
                         <ProgressBar.Triggers>
                             <EventTrigger RoutedEvent="ProgressBar.Loaded">
                             </EventTrigger>
@@ -21,6 +22,7 @@
                     </ProgressBar>
                 </StatusBarItem>
             </StatusBar>
+            <Button Content="Отмена" Width="50" Height="20" Margin="0,10,15,10" Click="Button_Click" HorizontalAlignment="Right"/>
         </StackPanel>
     </Grid>
 </Window>

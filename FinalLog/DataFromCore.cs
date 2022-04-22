@@ -619,6 +619,8 @@ namespace FinalLog
                     CompareDataWithHoleSize(MaxIncRuns, MaxIncOfHoleSize, item);
                     CompareDataWithHoleSize(MinIncRuns, MinIncOfHoleSize, item);
                     CompareDataWithHoleSize(MaxMudRuns, MaxMudOfHoleSize, item);
+                    if (item.Key == RunNumbers[RunCount - 1])
+                        break;
                 }
             }
         }
@@ -897,7 +899,7 @@ namespace FinalLog
         private string CalculateRmfc(string rm, string str = "rm", string run = "")
         {
             string[] splitStr = rm.Split('@');
-            if (splitStr[0] == "")
+            if (splitStr[0] == "" || splitStr[0].StartsWith("0.00"))
             {
                 splitStr[0] = "0.2";
                 splitStr[1] = "20";

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Win32;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
@@ -17,7 +17,7 @@ namespace FinalLog
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        LoadWindow loadWindow = new();
         string messageBoxText = "Перед использованием программы убедитесь в правильности заполнения данных Core!" +
             "\n ОЧЕНЬ ВАЖНО НЕ ПЕРЕНОСИТЬ И НЕ УДАЛЯТЬ ФАЙЛ Header.xlsm" +
             "\n ПОСЛЕ ЗАВЕРШЕНИЯ ВЫПОЛНЕНИЯ ПРОГРАММЫ В ОТКРЫВШЕМСЯ ФАЙЛЕ EXCEL НАЖИМАЕМ СОХРАНИТЬ КАК И ВЫБИРАЕМ НУЖНОЕ МЕСТО" +
@@ -73,10 +73,13 @@ namespace FinalLog
         public MainWindow()
         {
             InitializeComponent();
-            CheckVersionForUpdate();
-
-            MessageBoxButton button = MessageBoxButton.OK;
-            MessageBox.Show(messageBoxText, caption, button);
+            //CheckVersionForUpdate();
+            if(loadWindow.TabIndex != 0)
+            {
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBox.Show(messageBoxText, caption, button);
+            }
+           
             
         }
 
@@ -160,7 +163,7 @@ namespace FinalLog
                 Activity = activity.SelectedItem.ToString();
                 CustomerName = customerName.Text;
 
-                BackgroundWorker worker = new BackgroundWorker();
+                BackgroundWorker worker = new();
                 worker.WorkerReportsProgress = true;
                 worker.DoWork += Worker_DoWork;
                 worker.ProgressChanged += Worker_ProgressChanged;
@@ -171,7 +174,6 @@ namespace FinalLog
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
             statusText.Text = "Готово";
             btnStart.IsEnabled = true;
         }
@@ -246,16 +248,38 @@ namespace FinalLog
 
                     if(result == MessageBoxResult.Yes)
                     {
-                        //TODO: Запускаем программу обновления.
+                        //WindowState = WindowState.Minimized;
+                        //LoadWindow loadWindow = new();
+                        loadWindow.TabIndex = 0;
+                        loadWindow.Show();
+                        loadWindow.CheckUpdateProgramm();
+                        
+                        //loadWindow.CheckUpdateProgramm(newVersion);
+
+
+
+                        //Запускаем новый процесс
+                        /*Process isStartProcess = new();
+                        //Получаем папку в которой находится программа
+                        string currentDirectory = Directory.GetCurrentDirectory();
+                        //Выбираем программу для запуска
+                        isStartProcess.StartInfo.FileName = $"{currentDirectory}\\UpdateFinalLog.exe";
+                        isStartProcess.StartInfo.Arguments = newVersion;
+                        
+                        isStartProcess.Start();
+                        */
+
                     }
                 }
                 
-
             }
+
             catch (WebException we)
             {
                 statusText.Text = ((HttpWebResponse)we.Response).StatusCode.ToString();
             }      
         }
+
+        
     }
 }
