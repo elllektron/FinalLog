@@ -44,12 +44,12 @@ namespace FinalLog
             worksheet.Cells[16, "E"] = $"{_data.SSTVD:f2} м";
             worksheet.Cells[17, "E"] = $"{_data.SSTVD:f2} м";
             //Конечный забой
-            worksheet.Cells[16, "B"] = $"{_data.EndMD:f2} м";
-            worksheet.Cells[19, "B"] = $"{_data.EndMD:f2} м";
+            worksheet.Cells[16, "B"] = $"{_data.EndMD:f1} м";
+            worksheet.Cells[19, "B"] = $"{_data.EndMD:f1} м";
             //Диаметр скважины
             worksheet.Cells[17, "B"] = $"{_data.HoleSize:f1} мм";
             //Начальный забой
-            worksheet.Cells[18, "B"] = $"{_data.StartMD:f2} м";
+            worksheet.Cells[18, "B"] = $"{_data.StartMD:f1} м";
             //Дата начала бурения
             worksheet.Cells[20, "B"] = $"{_data.StartDateHeader}";
             worksheet.Cells[23, "B"] = $"{_data.StartDateHeader}";
@@ -115,7 +115,7 @@ namespace FinalLog
             num = 0;
             foreach (var item in _data.MaxMudOfHoleSize)
             {
-                worksheet.Cells[38 + num++, "E"] = $"{item.Value.Max()}";
+                worksheet.Cells[38 + num++, "E"] = $"{item.Value.Max():f1}";
             }
 
 
