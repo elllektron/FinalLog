@@ -22,8 +22,6 @@ namespace FinalLog
         //Версия программы
         private readonly string  version = "v1.1.8";
         private bool checkVersion;
-
-        LoadWindow loadWindow = new();
        
         private XmlDocument xmlDocument = new();
         private XmlElement xmlElement;
@@ -252,6 +250,7 @@ namespace FinalLog
 
                     if(result == MessageBoxResult.Yes)
                     {
+                        LoadWindow loadWindow = new();
                         loadWindow.CheckUpdateProgram(newVersion);
                         loadWindow.ShowDialog();
 
@@ -285,7 +284,6 @@ namespace FinalLog
             {
 
                 Word.Application appWord = new();
-                
 
                 try
                 {
