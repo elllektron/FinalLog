@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
+using Word = Microsoft.Office.Interop.Word;
 
 
 
@@ -17,37 +19,20 @@ namespace FinalLog
     /// </summary>
     public partial class MainWindow : Window
     {
+        //Версия программы
+        private readonly string  version = "v1.1.8";
+        private bool checkVersion;
+
         LoadWindow loadWindow = new();
-        string messageBoxText = "Перед использованием программы убедитесь в правильности заполнения данных Core!" +
-            "\n ОЧЕНЬ ВАЖНО НЕ ПЕРЕНОСИТЬ И НЕ УДАЛЯТЬ ФАЙЛ Header.xlsm" +
-            "\n ПОСЛЕ ЗАВЕРШЕНИЯ ВЫПОЛНЕНИЯ ПРОГРАММЫ В ОТКРЫВШЕМСЯ ФАЙЛЕ EXCEL НАЖИМАЕМ СОХРАНИТЬ КАК И ВЫБИРАЕМ НУЖНОЕ МЕСТО" +
-            "\n При заполнении помимо основных используются следующие данные:" +
-            "\n Координаты устья" +
-            "\n Название буровой например: BU-3000" +
-            "\n Альтитуда" +
-            "\n Глубина башмака" +
-            "\n Диаметр долота" +
-            "\n Температура" +
-            "\n Длинна КНБК" +
-            "\n Тип КНБК" +
-            "\n Часы бурения за рейс" +
-            "\n Часы циркуляции за рейс" +
-            "\n Начало и конец рейса" +
-            "\n Непромеры и aqusiton rate" +
-            "\n Номера приборов и ИИИ из рейса" +
-            "\n А так же параметры раствора";
-        
-
-        string caption = "Внимание!!!";
-
-
+       
         private XmlDocument xmlDocument = new();
         private XmlElement xmlElement;
 
         private XmlNodeList wellNames;
         private XmlNodeList runNumbers;
         private List<string> wellTypes = new() { "Пилотный ствол", "Транспортный ствол", "Горизонтальный ствол" };
-        private List<string> mudTypes = new() { 
+        private List<string> mudTypes = new() 
+        { 
             "Полимер-глинистый", 
             "Полимерный", 
             "Глинистый", 
@@ -56,10 +41,24 @@ namespace FinalLog
             "Пресный ингибированный",
             "Полимер-карбонатный инкапсулирующий"
         };
-
+        private List<string> companyList = new()
+        {
+            "АО \"Мессояханефтегаз\"",
+            "ООО \"РН - Уватнефтегаз\"",
+            "РН-Юганскнефтегаз",
+            "РН-Няганьнефтегаз",
+            "ООО \"Газпромнефть - Заполярье\" Песцовое",
+            "ООО \"Меретояханефтегаз\"",
+            "ООО \"Газпромнефть - Ямал\"",
+            "ООО \"ЛУКОЙЛ - Западная Сибирь\"",
+            "ООО \"СПП - Развитие\"",
+            "ООО \"СевКомНефтегаз\"",
+            "ООО \"ВТС\"",
+            "ООО \"РусГазБурение\"",
+            "АО \"РОСПАН ИНТЕРНЕШНЛ\"",
+        };
         private List<string> activitys = new() { "бурение/запись", "бурение" };
 
-        public string Version { get; set; }
         public string FileName { get; set; }
         public string WellName { get; set; }
         public List<string> RunNumbers { get; set; } = new List<string>();
@@ -67,20 +66,25 @@ namespace FinalLog
         public string MudType { get; set; }
         public string Activity { get; set; }
         public string CustomerName { get; set; }
-        public int ProgressBarValue { get; set; }
+        public string Company { get; set; }
+
 
 
         public MainWindow()
         {
             InitializeComponent();
-            //CheckVersionForUpdate();
-            if(loadWindow.TabIndex != 0)
-            {
-                MessageBoxButton button = MessageBoxButton.OK;
-                MessageBox.Show(messageBoxText, caption, button);
-            }
+
+            //Проверяем запущена ли программа FinalLogUpdater
+
+            Process[] procFinalLog = Process.GetProcessesByName("FinalLogUpdater");
+            if(procFinalLog.Length != 0)
+                //Если запущена останавливаем её
+                procFinalLog[0].Kill();
+
+            //Устанавливаем версию в title
+            Title = $"Final Log {version}";
+            checkVersion = CheckVersionForUpdate();
            
-            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -99,6 +103,7 @@ namespace FinalLog
                     wellType.Items.Clear();
                     mudType.Items.Clear();
                     activity.Items.Clear();
+                    company.Items.Clear();
                     xmlElement = xmlDocument.DocumentElement;
                     wellNames = xmlElement.GetElementsByTagName("Well");
 
@@ -136,6 +141,10 @@ namespace FinalLog
                     {
                         activity.Items.Add(activitys[i]);
                     }
+                    for (int i = 0; i < companyList.Count; i++)
+                    {
+                        company.Items.Add(companyList[i]);
+                    }
                 }
                 else
                 {
@@ -148,7 +157,7 @@ namespace FinalLog
         {
 
             if (wellNames != null && runNumbers != null && wellType.SelectedItem != null
-                && mudType.SelectedItem != null && activity.SelectedItem != null && customerName != null)
+                && mudType.SelectedItem != null && activity.SelectedItem != null && customerName != null && company != null)
             {
                 if (RunNumbers.Count > 0)
                     RunNumbers.Clear();
@@ -162,6 +171,7 @@ namespace FinalLog
                 MudType = mudType.SelectedItem.ToString();
                 Activity = activity.SelectedItem.ToString();
                 CustomerName = customerName.Text;
+                Company = company.SelectedItem.ToString();
 
                 BackgroundWorker worker = new();
                 worker.WorkerReportsProgress = true;
@@ -190,7 +200,7 @@ namespace FinalLog
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
 
-            _ = new WriteInHeaders(WellName, RunNumbers, xmlDocument, WellType, MudType, Activity, CustomerName, sender as BackgroundWorker);
+            _ = new WriteInHeaders(WellName, RunNumbers, xmlDocument, WellType, MudType, Activity, CustomerName, Company, sender as BackgroundWorker);
 
             (sender as BackgroundWorker).ReportProgress(100, "Сохраняем результаты");
         }
@@ -219,19 +229,13 @@ namespace FinalLog
         }
 
 
-        private void CheckVersionForUpdate()
+        private bool CheckVersionForUpdate()
         {
             HttpWebResponse response;
             string newVersion;
             string updateVersionTextBoxMessage = "Доступна новая версия программы. \n Вы хотите её обновить?";
             string updateVersionTextCaption = "Доступно обновление";
 
-            //Получаем текущую версию программы
-            string version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
-            string currentVersion = $"v{version.Remove(version.Length - 2)}"; 
-            //Устанавливаем версию в title
-            Title = $"Final Log {currentVersion}";
-       
             //Проверяем есть ли новая версия на сервере
             string url = $"https://github.com/elllektron/FinalLog/releases/latest";
             var uri = WebRequest.Create(url);
@@ -240,7 +244,7 @@ namespace FinalLog
                 response = (HttpWebResponse)uri.GetResponse();
                 var responseList = response.ResponseUri.ToString().Split('/');
                 newVersion = responseList[^1];
-                if (currentVersion != newVersion)
+                if (version != newVersion)
                 {
                     
                     MessageBoxButton buttonYesNo = MessageBoxButton.YesNo;
@@ -248,38 +252,58 @@ namespace FinalLog
 
                     if(result == MessageBoxResult.Yes)
                     {
-                        //WindowState = WindowState.Minimized;
-                        //LoadWindow loadWindow = new();
-                        loadWindow.TabIndex = 0;
-                        loadWindow.Show();
-                        loadWindow.CheckUpdateProgramm();
-                        
-                        //loadWindow.CheckUpdateProgramm(newVersion);
-
-
+                        loadWindow.CheckUpdateProgram(newVersion);
+                        loadWindow.ShowDialog();
 
                         //Запускаем новый процесс
-                        /*Process isStartProcess = new();
+                        Process isStartProcess = new();
                         //Получаем папку в которой находится программа
                         string currentDirectory = Directory.GetCurrentDirectory();
                         //Выбираем программу для запуска
-                        isStartProcess.StartInfo.FileName = $"{currentDirectory}\\UpdateFinalLog.exe";
-                        isStartProcess.StartInfo.Arguments = newVersion;
-                        
-                        isStartProcess.Start();
-                        */
+                        isStartProcess.StartInfo.FileName = $"{currentDirectory}\\FinalLogUpdater.exe";
 
+                        isStartProcess.Start();
                     }
+                    return true;
                 }
-                
+                return false;
             }
 
             catch (WebException we)
             {
                 statusText.Text = ((HttpWebResponse)we.Response).StatusCode.ToString();
-            }      
+            }
+            return false;
         }
 
-        
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            string messageBoxText = "Файл инструкций не найден возможно он был удален.";
+            string caption = "Ошибка";
+            string path = $"{Directory.GetCurrentDirectory()}\\ИНСТРУКЦИЯ!!!!!.docx";
+            if (File.Exists(path))
+            {
+
+                Word.Application appWord = new();
+                
+
+                try
+                {
+                    appWord.Documents.Open(path);
+                }
+                catch 
+                {
+                    appWord.Documents.Close();
+
+                }
+                appWord.Application.Visible = true;
+
+            }
+            else
+            {
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBox.Show(messageBoxText, caption, button);
+            }
+        }
     }
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinalLog", "FinalLog\FinalLog.csproj", "{5ADA19E7-0D45-44B1-8DC9-7BC1C1CC7138}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinalLogUpdater", "FinalLogUpdater\FinalLogUpdater.csproj", "{AC6168F2-BCC1-4C51-BEDD-F6BB58317BBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5ADA19E7-0D45-44B1-8DC9-7BC1C1CC7138}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ADA19E7-0D45-44B1-8DC9-7BC1C1CC7138}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ADA19E7-0D45-44B1-8DC9-7BC1C1CC7138}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC6168F2-BCC1-4C51-BEDD-F6BB58317BBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6168F2-BCC1-4C51-BEDD-F6BB58317BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6168F2-BCC1-4C51-BEDD-F6BB58317BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6168F2-BCC1-4C51-BEDD-F6BB58317BBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

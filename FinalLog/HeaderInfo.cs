@@ -25,9 +25,12 @@ namespace FinalLog
                 worksheet.Rows[38 + i] = "";
             }
 
+            //компания
+            worksheet.Cells[2, "B"] = $"{_data.Company}";
 
             //номер скважины
             worksheet.Cells[3, "B"] = $"{_data.WellName}#{_data.PadName} {_data.WellType}";
+            
             //тип скважины
             worksheet.Cells[4, "B"] = _data.WellType;
             //Название месторождения
@@ -38,16 +41,21 @@ namespace FinalLog
             worksheet.Cells[8, "B"] = _data.JobNumber;
             //Альтитуда
             worksheet.Cells[13, "B"] = $"{_data.SSTVD:f2} м";
+            worksheet.Cells[16, "E"] = $"{_data.SSTVD:f2} м";
+            worksheet.Cells[17, "E"] = $"{_data.SSTVD:f2} м";
             //Конечный забой
             worksheet.Cells[16, "B"] = $"{_data.EndMD:f2} м";
+            worksheet.Cells[19, "B"] = $"{_data.EndMD:f2} м";
             //Диаметр скважины
             worksheet.Cells[17, "B"] = $"{_data.HoleSize:f1} мм";
             //Начальный забой
             worksheet.Cells[18, "B"] = $"{_data.StartMD:f2} м";
             //Дата начала бурения
             worksheet.Cells[20, "B"] = $"{_data.StartDateHeader}";
+            worksheet.Cells[23, "B"] = $"{_data.StartDateHeader}";
             //Дата конца бурения
             worksheet.Cells[21, "B"] = $"{_data.EndDateRuns[_data.RunNumbers[_data.RunCount - 1]]}";
+            
             
             
             //Количество рейсов
@@ -70,7 +78,7 @@ namespace FinalLog
             foreach (var item in _data.EndDepthOfHoleSize)
             {
                 worksheet.Cells[27 + num, "C"] = $"{item.Value.Last():f1} м";
-                worksheet.Cells[38 + num, "G"] = $"{item.Value.Max():f1} м";
+                worksheet.Cells[38 + num, "G"] = $"{item.Value.Last():f1} м";
                 num++;
             }
 
@@ -87,6 +95,7 @@ namespace FinalLog
 
 
             num = 0;
+            //Максимальный угол за каждую секцию
             foreach (var item in _data.MaxIncOfHoleSize)
             {
                 worksheet.Cells[38 + num, "C"] = $"{item.Value.Last()}°";
@@ -94,12 +103,15 @@ namespace FinalLog
             }
 
             num = 0;
+            //Минимальный угол за каждую секцию
             foreach (var item in _data.MinIncOfHoleSize)
             {
                 worksheet.Cells[38 + num, "B"] = $"{item.Value.Last()}°";
                 num++;
             }
 
+
+            //Информация по раствор
             num = 0;
             foreach (var item in _data.MaxMudOfHoleSize)
             {

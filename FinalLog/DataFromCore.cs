@@ -9,7 +9,7 @@ namespace FinalLog
     public class DataFromCore
     {
         public DataFromCore(string wellName, List<string> runs, XmlDocument coreFile,
-            string wellType, string mudType)
+            string wellType, string mudType, string company)
         {
 
             _wellName = wellName;
@@ -17,6 +17,7 @@ namespace FinalLog
             _coreFile = coreFile;
             _wellType = wellType;
             _mudType = mudType;
+            _company = company;
             RunFillingHeaders();
         }
 
@@ -30,7 +31,7 @@ namespace FinalLog
         private readonly XmlDocument _coreFile;
         private readonly string _wellType;
         private readonly string _mudType;
-
+        private readonly string _company;
 
         private Dictionary<string, double> _nozzlessSquare { get; set; } = new Dictionary<string, double>();
         private Dictionary<string, string> _bitType { get; set; } = new Dictionary<string, string>();
@@ -56,6 +57,7 @@ namespace FinalLog
         public List<string> RunNumbers { get; set; }
         public string WellType { get; set; }
         public string MudType { get; set; }
+        public string Company { get; set; }
 
         //свойства полученные из LWDJob
         public string JobNumber { get; set; }
@@ -142,6 +144,7 @@ namespace FinalLog
             RunNumbers = _runs;
             WellType = _wellType;
             MudType = _mudType;
+            Company = _company;
             RunCount = _runs.Count;
 
             GetDataFromLWDJob();

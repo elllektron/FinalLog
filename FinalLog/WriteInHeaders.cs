@@ -15,13 +15,14 @@ namespace FinalLog
         private readonly string _mudType;
         private readonly string _activity;
         private readonly string _customerName;
+        private readonly string _company;
         private readonly BackgroundWorker _worker;
         private string statusString = "";
 
 
         public WriteInHeaders(string wellName, List<string> runs,
             XmlDocument coreFile, string wellType, string mudType,
-            string activity, string customerName, BackgroundWorker worker)
+            string activity, string customerName, string company, BackgroundWorker worker)
         {
             _wellName = wellName;
             _runs = runs;
@@ -30,6 +31,7 @@ namespace FinalLog
             _mudType = mudType;
             _activity = activity;
             _customerName = customerName;
+            _company = company;
             _worker = worker;
             RunFillingHeaders();
 
@@ -37,7 +39,7 @@ namespace FinalLog
 
         private void RunFillingHeaders()
         {
-            DataFromCore data = new(_wellName, _runs, _coreFile, _wellType, _mudType);
+            DataFromCore data = new(_wellName, _runs, _coreFile, _wellType, _mudType, _company);
             string _fileExelPath = "Data\\Header.xlsm";
             string _fileExelPathDebug = "FinalLog\\Data\\Header.xlsm";
             string currentDirectory = Directory.GetCurrentDirectory();
@@ -102,6 +104,14 @@ namespace FinalLog
                 _worker.ReportProgress(100, statusString);
                 workbook.Close(true);
                 application.Quit();
+            }
+            finally 
+            {
+                if (application.Visible == false)
+                {
+                    workbook.Close(true);
+                    application.Quit();
+                }
             }
 
         }

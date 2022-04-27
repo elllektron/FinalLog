@@ -13,7 +13,6 @@ namespace FinalLog
         public LoadWindow()
         {
             InitializeComponent();
-            //CheckUpdateProgramm();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -21,27 +20,27 @@ namespace FinalLog
             Close();
         }
 
-        public void CheckUpdateProgramm()
+        public void CheckUpdateProgram(string version)
         {
             
            
             WebClient downloadFile = new();
-            string url = "https://github.com/elllektron/FinalLog/files/8500776/FinalLog.zip";
-            //https://github.com/elllektron/FinalLog/files/8500776/FinalLog.zip
+            
+            string url = $"https://github.com/elllektron/FinalLog/releases/download/{version}/FinalLog.zip";
 
             string checkUrl = $"{url}";//{version}.zip";
 
             
             downloadFile.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
             downloadFile.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-            downloadFile.DownloadFileAsync(new Uri(checkUrl), "FinalLogNew.zip");
+            downloadFile.DownloadFileAsync(new Uri(url), "FinalLogNew.zip");
             
         }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage;
-            statusText.Text = "Загружено байт: " + e.BytesReceived + progressBar.Value;
+            //statusText.Text = "Загружено байт: " + e.BytesReceived + progressBar.Value;
         }
 
         private void Completed(object sender, AsyncCompletedEventArgs e)
@@ -53,7 +52,7 @@ namespace FinalLog
             else
             {
                 statusText.Text = "Скачивание завершено";
-                TabIndex = 1;
+                DialogResult = false;
             }
         }
     }
