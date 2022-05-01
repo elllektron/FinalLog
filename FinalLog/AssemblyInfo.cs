@@ -10,5 +10,5 @@ using System.Windows;
                                               // app, or any theme specific resource dictionaries)
 )]
 
-[assembly: AssemblyVersion("1.1.4")]
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "App.config", Watch = true)]
 

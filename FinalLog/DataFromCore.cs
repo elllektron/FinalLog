@@ -655,7 +655,9 @@ namespace FinalLog
             }
         }
 
-
+        /// <summary>
+        /// Получает забой на начало рейса
+        /// </summary>
         private void GetStartDepthHeader()
         {
             foreach (var item in StartDepthRuns)
@@ -667,7 +669,9 @@ namespace FinalLog
                 }
             }
         }
-
+        /// <summary>
+        /// Получает конечный забой в рейсе
+        /// </summary>
         private void GetEndDepthHeader()
         {
             foreach (var item in EndDepthRuns)
@@ -679,7 +683,9 @@ namespace FinalLog
                 }
             }
         }
-
+        /// <summary>
+        /// Получает дату начала рейса
+        /// </summary>
         private void GetStartDateHeader()
         {
             foreach (var item in StartDateRuns)
@@ -691,7 +697,9 @@ namespace FinalLog
                 }
             }
         }
-
+        /// <summary>
+        /// Получает дату конца рейса
+        /// </summary>
         private void GetEndDateHeader()
         {
 
@@ -705,7 +713,9 @@ namespace FinalLog
             }
         }
 
-
+        /// <summary>
+        /// Получает диаметр скважины
+        /// </summary>
         private void GetHoleSize()
         {
             foreach (var item in HoleSizeRuns)
@@ -817,7 +827,10 @@ namespace FinalLog
             return resultString;
         }
 
-
+        /// <summary>
+        /// Получает Склонение из файла Core
+        /// </summary>
+        /// <param name="run"></param>
         private void GetDeclination(string run)
         {
             var declination = _coreFile.GetElementsByTagName("Declination");
@@ -830,7 +843,10 @@ namespace FinalLog
             Declination = result + "°";
         }
 
-
+        /// <summary>
+        /// Получает Dip из файла Core
+        /// </summary>
+        /// <param name="run"></param>
         private void GetMagneticDip(string run)
         {
             var dip = _coreFile.GetElementsByTagName("Magnetic_DIP");
@@ -842,7 +858,9 @@ namespace FinalLog
             }
             MagneticDip = result + "°";
         }
-
+        /// <summary>
+        /// Получает SSTVD из файла Core
+        /// </summary>
         private void GetSSTVD()
         {
             string sstvd = _coreFile.GetElementsByTagName("Drill_Floor").Item(0).InnerText;
@@ -851,7 +869,9 @@ namespace FinalLog
             double result = double.Parse(sstvd) / feetToMeter;
             SSTVD = result;
         }
-
+        /// <summary>
+        /// /Получает данные из текущего рейса
+        /// </summary>
         private void GetDataFromCurrentRuns()
         {
             for (int i = 0; i < RunNumbers.Count; i++)
@@ -871,7 +891,12 @@ namespace FinalLog
                 }
             }
         }
-
+        /// <summary>
+        /// Конвертирует время из строки полученное в долях и переводит его в нормальное время
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="start"></param>
+        /// <returns></returns>
         private string TimeConverter(string time, bool start)
         {
             string hours = "";

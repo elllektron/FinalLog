@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
 using Word = Microsoft.Office.Interop.Word;
-
+using log4net;
 
 
 namespace FinalLog
@@ -57,6 +57,8 @@ namespace FinalLog
         };
         private List<string> activitys = new() { "бурение/запись", "бурение" };
 
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public string FileName { get; set; }
         public string WellName { get; set; }
         public List<string> RunNumbers { get; set; } = new List<string>();
@@ -71,18 +73,17 @@ namespace FinalLog
         public MainWindow()
         {
             InitializeComponent();
-
+            log4net.Config.XmlConfigurator.Configure();
             //Проверяем запущена ли программа FinalLogUpdater
 
             Process[] procFinalLog = Process.GetProcessesByName("FinalLogUpdater");
-            if(procFinalLog.Length != 0)
+            if (procFinalLog.Length != 0)
                 //Если запущена останавливаем её
                 procFinalLog[0].Kill();
 
             //Устанавливаем версию в title
             Title = $"Final Log {version}";
             checkVersion = CheckVersionForUpdate();
-           
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -153,31 +154,39 @@ namespace FinalLog
 
         private void Start_Filling(object sender, RoutedEventArgs e)
         {
-
-            if (wellNames != null && runNumbers != null && wellType.SelectedItem != null
-                && mudType.SelectedItem != null && activity.SelectedItem != null && customerName != null && company != null)
+            
+            try
             {
-                if (RunNumbers.Count > 0)
-                    RunNumbers.Clear();
-
-                for (int i = 0; i < runBox.SelectedItems.Count; i++)
+                if (wellNames != null && runNumbers != null && wellType.SelectedItem != null
+                && mudType.SelectedItem != null && activity.SelectedItem != null && customerName != null && company != null)
                 {
-                    RunNumbers.Add(runBox.SelectedItems[i].ToString());
-                    RunNumbers.Sort();
-                }
-                WellType = wellType.SelectedItem.ToString();
-                MudType = mudType.SelectedItem.ToString();
-                Activity = activity.SelectedItem.ToString();
-                CustomerName = customerName.Text;
-                Company = company.SelectedItem.ToString();
+                    if (RunNumbers.Count > 0)
+                        RunNumbers.Clear();
 
-                BackgroundWorker worker = new();
-                worker.WorkerReportsProgress = true;
-                worker.DoWork += Worker_DoWork;
-                worker.ProgressChanged += Worker_ProgressChanged;
-                worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-                worker.RunWorkerAsync();
+                    for (int i = 0; i < runBox.SelectedItems.Count; i++)
+                    {
+                        RunNumbers.Add(runBox.SelectedItems[i].ToString());
+                        RunNumbers.Sort();
+                    }
+                    WellType = wellType.SelectedItem.ToString();
+                    MudType = mudType.SelectedItem.ToString();
+                    Activity = activity.SelectedItem.ToString();
+                    CustomerName = customerName.Text;
+                    Company = company.SelectedItem.ToString();
+
+                    BackgroundWorker worker = new();
+                    worker.WorkerReportsProgress = true;
+                    worker.DoWork += Worker_DoWork;
+                    worker.ProgressChanged += Worker_ProgressChanged;
+                    worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+                    worker.RunWorkerAsync();
+                }
             }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -1,4 +1,6 @@
-﻿using Microsoft.Office.Interop.Excel;
+﻿using log4net;
+using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -18,6 +20,7 @@ namespace FinalLog
         private readonly string _company;
         private readonly BackgroundWorker _worker;
         private string statusString = "";
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
         public WriteInHeaders(string wellName, List<string> runs,
@@ -33,7 +36,11 @@ namespace FinalLog
             _customerName = customerName;
             _company = company;
             _worker = worker;
+       
+            log4net.Config.XmlConfigurator.Configure();
             RunFillingHeaders();
+        
+           
 
         }
 
@@ -98,8 +105,9 @@ namespace FinalLog
                 application.Visible = true;
 
             }
-            catch
+            catch(Exception ex)
             {
+                log.Error(ex);
                 statusString = "Не удается найти файл excel";
                 _worker.ReportProgress(100, statusString);
                 workbook.Close(true);
