@@ -39,9 +39,6 @@ namespace FinalLog
        
             log4net.Config.XmlConfigurator.Configure();
             RunFillingHeaders();
-        
-           
-
         }
 
         private void RunFillingHeaders()

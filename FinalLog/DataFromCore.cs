@@ -270,8 +270,10 @@ namespace FinalLog
                                 {
                                     Engeneer.Add(runNumber, TranslateString(name) + ".");
                                     break;
-                                }
+                                } 
                             }
+                            if (!Engeneer.ContainsKey(runNumber))
+                                Engeneer.Add(runNumber, "WTF");
 
                             break;
                         case "Bit_Data":
