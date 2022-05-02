@@ -98,16 +98,33 @@ namespace FinalLog
             //Максимальный угол за каждую секцию
             foreach (var item in _data.MaxIncOfHoleSize)
             {
-                worksheet.Cells[38 + num, "C"] = $"{item.Value.Last()}°";
-                num++;
+                if (_data.RunCount < 2)
+                {
+                    worksheet.Cells[38 + num, "C"] = $"{item.Value.Last()}°";
+                    num++;
+                }
+                else
+                {
+                    worksheet.Cells[38 + num, "C"] = $"{item.Value.Max()}°";
+                    num++;
+                }
             }
 
             num = 0;
             //Минимальный угол за каждую секцию
             foreach (var item in _data.MinIncOfHoleSize)
             {
-                worksheet.Cells[38 + num, "B"] = $"{item.Value.Last()}°";
-                num++;
+                if (_data.RunCount < 2)
+                {
+                    worksheet.Cells[38 + num, "B"] = $"{item.Value.Last()}°";
+                    num++;
+                }
+                else
+                {
+                    worksheet.Cells[38 + num, "B"] = $"{item.Value.Min()}°";
+                    num++;
+                }
+               
             }
 
 
