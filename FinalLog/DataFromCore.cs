@@ -66,6 +66,7 @@ namespace FinalLog
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public string RigType { get; set; }
+        public string StartDate { get; set; }
 
 
         public string Declination { get; set; }
@@ -202,7 +203,9 @@ namespace FinalLog
                     case "Job_Number":
                         JobNumber = item;
                         break;
-
+                    case "Start_Date":
+                        StartDate = item;
+                        break;
                     default:
                         break;
                 }
@@ -871,6 +874,7 @@ namespace FinalLog
             double result = double.Parse(sstvd) / feetToMeter;
             SSTVD = result;
         }
+
         /// <summary>
         /// /Получает данные из текущего рейса
         /// </summary>

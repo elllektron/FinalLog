@@ -25,6 +25,9 @@ namespace FinalLog
             try
             {
                 double water = 20;
+                double oil = 0;
+                string solid = "";
+                string sand = "";
                 //открываем вкладку RunSum
                 Worksheet worksheet = (Worksheet)_workbook.Sheets["RunSum"];
 
@@ -85,15 +88,19 @@ namespace FinalLog
                     // ПВ / ДНС
                     worksheet.Cells[22, 3 + i] = $"{_data.PV[_data.RunNumbers[i]]} / {_data.YP[_data.RunNumbers[i]]}";
                     //Твердая фаза / песок
-                    worksheet.Cells[23, 3 + i] = $"{_data.Solid[_data.RunNumbers[i]]} / {_data.Sand[_data.RunNumbers[i]]}";
+                    solid = _data.Solid[_data.RunNumbers[i]];
+                    sand = _data.Sand[_data.RunNumbers[i]];
+                    worksheet.Cells[23, 3 + i] = $"{solid} / {sand}";
                     //Хлориды
                     worksheet.Cells[24, 3 + i] = _data.Chlorides[_data.RunNumbers[i]];
                     //PH
                     worksheet.Cells[25, 3 + i] = _data.PH[_data.RunNumbers[i]];
                     //Смазка/вода
+                    oil = _data.Oil[_data.RunNumbers[i]];
+
+                    water = 100 - (oil + double.Parse(solid) + double.Parse(sand));
                     if (_data.MudType == "РУО")
                     {
-                        water = 20;
                         //Сопративление раствора
                         worksheet.Cells[27, 3 + i] = "-";
                         worksheet.Cells[28, 3 + i] = "-";
@@ -101,13 +108,12 @@ namespace FinalLog
                     }
                     else
                     {
-                        water = 80;
                         //Сопративление раствора
                         worksheet.Cells[27, 3 + i] = _data.Rm[_data.RunNumbers[i]];
                         worksheet.Cells[28, 3 + i] = _data.Rmf[_data.RunNumbers[i]];
                         worksheet.Cells[29, 3 + i] = _data.Rmc[_data.RunNumbers[i]];
                     }
-                    worksheet.Cells[26, 3 + i] = $"{_data.Oil[_data.RunNumbers[i]]} / {water}";
+                    worksheet.Cells[26, 3 + i] = $"{oil} / {water}";
                     //Температура раствора
                     worksheet.Cells[30, 3 + i] = _data.Temp[_data.RunNumbers[i]];
                     //Сопротивление при максимальной температуре

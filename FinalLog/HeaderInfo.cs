@@ -52,7 +52,7 @@ namespace FinalLog
             worksheet.Cells[18, "B"] = $"{_data.StartMD:f1} м";
             //Дата начала бурения
             worksheet.Cells[20, "B"] = $"{_data.StartDateHeader}";
-            worksheet.Cells[23, "B"] = $"{_data.StartDateHeader}";
+            worksheet.Cells[23, "B"] = $"{_data.StartDate}";
             //Дата конца бурения
             worksheet.Cells[21, "B"] = $"{_data.EndDateRuns[_data.RunNumbers[_data.RunCount - 1]]}";
             
