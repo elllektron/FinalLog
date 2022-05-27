@@ -29,7 +29,17 @@ namespace FinalLog
             worksheet.Cells[2, "B"] = $"{_data.Company}";
 
             //номер скважины
-            worksheet.Cells[3, "B"] = $"{_data.WellName}#{_data.PadName} {_data.WellType}";
+            string wellName = "";
+            for(var i = 0; i < _data.WellName.Length; i++)
+            {
+                char ch = _data.WellName[i];
+                _data.WellName = _data.WellName.ToLower();
+                if (ch == 's' || ch == 'f')                
+                    break;
+                
+                wellName += ch;
+            }
+            worksheet.Cells[3, "B"] = $"{wellName}#{_data.PadName} {_data.WellType}";
             
             //тип скважины
             worksheet.Cells[4, "B"] = _data.WellType;
