@@ -128,11 +128,11 @@ namespace FinalLog
             }
 
 
-            //Информация по раствор
+            //Информация по раствору
             num = 0;
             foreach (var item in _data.MaxMudOfHoleSize)
             {
-                worksheet.Cells[38 + num++, "E"] = $"{item.Value.Max():f1}";
+                worksheet.Cells[38 + num++, "E"] = $"{item.Value.Max()}";
             }
 
 

@@ -20,7 +20,7 @@ namespace FinalLog
     public partial class MainWindow : Window
     {
         //Версия программы
-        private readonly string  version = "v1.1.8";
+        private readonly string  version = "v1.1.9";
         private bool checkVersion;
        
         private XmlDocument xmlDocument = new();
