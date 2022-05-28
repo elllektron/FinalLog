@@ -291,7 +291,7 @@ namespace FinalLog
         {
             string messageBoxText = "Файл инструкций не найден возможно он был удален.";
             string caption = "Ошибка";
-            string path = $"{Directory.GetCurrentDirectory()}\\ИНСТРУКЦИЯ!!!!!.docx";
+            string path = $"{Directory.GetCurrentDirectory()}\\README.docx";
             if (File.Exists(path))
             {
 
