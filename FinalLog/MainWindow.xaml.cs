@@ -20,7 +20,7 @@ namespace FinalLog
     public partial class MainWindow : Window
     {
         //Версия программы
-        private readonly string  version = "v1.1.9";
+        private readonly string  version = "v1.2.0";
         private bool checkVersion;
        
         private XmlDocument xmlDocument = new();
@@ -67,7 +67,7 @@ namespace FinalLog
         public string Activity { get; set; }
         public string CustomerName { get; set; }
         public string Company { get; set; }
-
+        public bool Check { get; set; }
 
 
         public MainWindow()
@@ -114,10 +114,12 @@ namespace FinalLog
                     {
                         if (wellNames.Count > 1)
                         {
+                            
                             if (wellTypes[i] == "Горизонтальный ствол")
                             {
                                 for (int j = 1; j < wellNames.Count + 1; j++)
                                 {
+                               
                                     wellType.Items.Add(wellTypes[i] + j);
                                 }
                             }
@@ -160,6 +162,7 @@ namespace FinalLog
                 if (wellNames != null && runNumbers != null && wellType.SelectedItem != null
                 && mudType.SelectedItem != null && activity.SelectedItem != null && customerName != null && company != null)
                 {
+                    Check = (bool)checkFb.IsChecked;
                     if (RunNumbers.Count > 0)
                         RunNumbers.Clear();
 
@@ -206,8 +209,8 @@ namespace FinalLog
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            _ = new WriteInHeaders(WellName, RunNumbers, xmlDocument, WellType, MudType, Activity, CustomerName, Company, sender as BackgroundWorker);
+            
+            _ = new WriteInHeaders(WellName, RunNumbers, xmlDocument, WellType, MudType, Activity, CustomerName, Company, sender as BackgroundWorker, Check);
 
             (sender as BackgroundWorker).ReportProgress(100, "Сохраняем результаты");
         }

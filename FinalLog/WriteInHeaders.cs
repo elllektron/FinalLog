@@ -19,13 +19,14 @@ namespace FinalLog
         private readonly string _customerName;
         private readonly string _company;
         private readonly BackgroundWorker _worker;
+        private readonly bool _check;
         private string statusString = "";
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
         public WriteInHeaders(string wellName, List<string> runs,
             XmlDocument coreFile, string wellType, string mudType,
-            string activity, string customerName, string company, BackgroundWorker worker)
+            string activity, string customerName, string company, BackgroundWorker worker, bool check)
         {
             _wellName = wellName;
             _runs = runs;
@@ -36,7 +37,7 @@ namespace FinalLog
             _customerName = customerName;
             _company = company;
             _worker = worker;
-       
+            _check = check;
             log4net.Config.XmlConfigurator.Configure();
             RunFillingHeaders();
         }
@@ -82,7 +83,7 @@ namespace FinalLog
 
                 statusString = "Заполняем Header Info";
                 _worker.ReportProgress(30, statusString);
-                HeaderInfo header = new(workbook, data);
+                HeaderInfo header = new(workbook, data, _check);
 
                 statusString = "Заполняем Run Summary";
                 _worker.ReportProgress(45, statusString);

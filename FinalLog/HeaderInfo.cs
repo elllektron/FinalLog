@@ -7,11 +7,13 @@ namespace FinalLog
     {
         private readonly Workbook _workbook;
         private readonly DataFromCore _data;
+        private readonly bool _check;
 
-        public HeaderInfo(Workbook workbook, DataFromCore data)
+        public HeaderInfo(Workbook workbook, DataFromCore data, bool check)
         {
             _workbook = workbook;
             _data = data;
+            _check = check;
             CompleteHederInfo();
         }
 
@@ -39,6 +41,11 @@ namespace FinalLog
                 
                 wellName += ch;
             }
+            if (_check && _data.WellType.Contains("Горизонтальный ствол"))
+            {
+                _data.WellType = _data.WellType.Replace("Горизонтальный ствол", "FB");
+            }
+         
             worksheet.Cells[3, "B"] = $"{wellName}#{_data.PadName} {_data.WellType}";
             
             //тип скважины
