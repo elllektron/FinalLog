@@ -18,6 +18,11 @@ namespace FinalLog
         protected override void OnStartup(StartupEventArgs e)
 
         {
+            if (File.Exists(file))
+                File.Delete(file);
+
+            log4net.Config.XmlConfigurator.Configure();
+            log.Info("        =============  Started Logging  =============       :) ");
             try
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US"); ;
@@ -33,11 +38,7 @@ namespace FinalLog
                   new FrameworkPropertyMetadata(
 
                         XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
-                if (File.Exists(file))
-                    File.Delete(file);
-
-                log4net.Config.XmlConfigurator.Configure();
-                log.Info("        =============  Started Logging  =============        ");
+                
 
                 
             }catch(Exception ex)

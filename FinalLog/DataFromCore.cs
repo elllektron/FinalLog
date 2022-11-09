@@ -49,7 +49,13 @@ namespace FinalLog
             "Density Insert"
         };
 
+        private List<string> ItemsAndDictName = new()
+        {
+            "Density_Max" ,
+            "Funnel_Viscosity_Start",
 
+
+        };
 
 
         //Свойства из конструктора
@@ -138,6 +144,11 @@ namespace FinalLog
         public Dictionary<string, double> LengthBHA { get; set; } = new Dictionary<string, double>();
 
         public Dictionary<string, SortedDictionary<double, List<string>>> DailyMudSum { get; set; } = new Dictionary<string, SortedDictionary<double, List<string>>>();
+
+        //Ошибки в заполнении файла Core
+        public Dictionary<string, string> ErrorsInRunsDict { get; set; } = new Dictionary<string, string>();
+
+        public Dictionary<string, Dictionary<string, string>> ItemsDict { get; set; } = new Dictionary<string, Dictionary<string, string>>();
 
         private void RunFillingHeaders()
         {
@@ -254,10 +265,10 @@ namespace FinalLog
                             EndDepthRuns.Add(runNumber, double.Parse(item, CultureInfo.InvariantCulture) / feetToMeter);
                             break;
                         case "Circ_Hrs":
-                            Circulation.Add(runNumber, item);
+                                Circulation.Add(runNumber, item);
                             break;
                         case "Drill_Hrs":
-                            DrillingHours.Add(runNumber, item);
+                                DrillingHours.Add(runNumber, item);
                             break;
                         case "Engineers_On_Duty":
                             var engeneerData = runItems.Item(j).ChildNodes;
@@ -277,7 +288,6 @@ namespace FinalLog
                             }
                             if (!Engeneer.ContainsKey(runNumber))
                                 Engeneer.Add(runNumber, "WTF");
-
                             break;
                         case "Bit_Data":
                             var bit = runItems.Item(j).ChildNodes;
@@ -287,13 +297,15 @@ namespace FinalLog
                                 if (bit.Item(k).Name == "Size")
                                 {
                                     holeSize = double.Parse(bit.Item(k).InnerText);
-                                    HoleSizeRuns.Add(runNumber, Math.Round(holeSize * feetToMillimeter, 1));
+                                    HoleSizeRuns.Add(runNumber, Math.Round(holeSize * feetToMillimeter, 1)); 
                                 }
 
                                 if (bit.Item(k).Name == "TFA")
                                 {
                                     if (bit.Item(k).InnerText != "")
                                         _nozzlessSquare.Add(runNumber, Math.Pow(Math.Sqrt(double.Parse(bit.Item(k).InnerText)) * inchToMillimeter, 2));
+                                    else
+                                        _nozzlessSquare.Add(runNumber, 0);
                                 }
 
                                 if (bit.Item(k).Name == "Type")
@@ -349,73 +361,67 @@ namespace FinalLog
                             double phEnd = 0;
                             for (int k = 0; k < mudItem.Count; k++)
                             {
-                                if (mudItem.Item(k).InnerText != "")
-                                {
-                                    switch (mudItem.Item(k).Name)
-                                    {
-                                        case "Density_Max":
-                                            MaxMudRuns.Add(runNumber, double.Parse(mudItem.Item(k).InnerText));
-                                            break;
-                                        case "Funnel_Viscosity_Start":
-                                            funnelViscosityStart = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "Funnel_Viscosity_End":
-                                            funnelViscosityEnd = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "Oil_Percentage_Start":
-                                            oilStart = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "Oil_Percentage_End":
-                                            oilEnd = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "Sand_Percentage_Max":
-                                            Sand.Add(runNumber, mudItem.Item(k).InnerText);
-                                            break;
-                                        case "Solid_Percentage_Max":
-                                            Solid.Add(runNumber, mudItem.Item(k).InnerText);
-                                            break;
-                                        case "PV_Start":
-                                            pvStart = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "PV_End":
-                                            pvEnd = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "YP_Start":
-                                            ypStart = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "YP_End":
-                                            ypEnd = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "pH_Start":
-                                            phStart = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "pH_End":
-                                            phEnd = double.Parse(mudItem.Item(k).InnerText);
-                                            break;
-                                        case "KCl_Max":
-                                            KCL.Add(runNumber, mudItem.Item(k).InnerText);
-                                            break;
-                                        case "Total_Chlorides_Max":
-                                            Chlorides.Add(runNumber, mudItem.Item(k).InnerText);
-                                            break;
-                                        case "Bore_Hole_Temp_Max":
-                                            Temp.Add(runNumber, mudItem.Item(k).InnerText);
-                                            break;
-                                        case "Rm_At_Temp_Max":
-                                            Rm.Add(runNumber, CalculateRmfc(mudItem.Item(k).InnerText));
-                                            Rmf.Add(runNumber, CalculateRmfc(mudItem.Item(k).InnerText, "rmf"));
-                                            Rmc.Add(runNumber, CalculateRmfc(mudItem.Item(k).InnerText, "rmc"));
-                                            RmMaxTemp.Add(runNumber, CalculateRmfc(mudItem.Item(k).InnerText, "rmMaxTemp", runNumber));
-                                            break;
-                                    }
-                                }
-                                else
+                                if (mudItem.Item(k).InnerText == "")
                                 {
                                     mudItem.Item(k).InnerText = "0";
-                                    if (mudItem.Item(k).Name == "KCl_Max")
-                                        KCL.Add(runNumber, mudItem.Item(k).InnerText);
                                 }
-
+                                switch (mudItem.Item(k).Name)
+                                {
+                                    case "Density_Max":
+                                        MaxMudRuns.Add(runNumber, double.Parse(mudItem.Item(k).InnerText));
+                                        break;
+                                    case "Funnel_Viscosity_Start":
+                                        funnelViscosityStart = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "Funnel_Viscosity_End":
+                                        funnelViscosityEnd = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "Oil_Percentage_Start":
+                                        oilStart = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "Oil_Percentage_End":
+                                        oilEnd = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "Sand_Percentage_Max":
+                                        Sand.Add(runNumber, mudItem.Item(k).InnerText);
+                                        break;
+                                    case "Solid_Percentage_Max":
+                                        Solid.Add(runNumber, mudItem.Item(k).InnerText);
+                                        break;
+                                    case "PV_Start":
+                                        pvStart = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "PV_End":
+                                        pvEnd = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "YP_Start":
+                                        ypStart = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "YP_End":
+                                        ypEnd = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "pH_Start":
+                                        phStart = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "pH_End":
+                                        phEnd = double.Parse(mudItem.Item(k).InnerText);
+                                        break;
+                                    case "KCl_Max":
+                                        KCL.Add(runNumber, mudItem.Item(k).InnerText);
+                                        break;
+                                    case "Total_Chlorides_Max":
+                                        Chlorides.Add(runNumber, mudItem.Item(k).InnerText);
+                                        break;
+                                    case "Bore_Hole_Temp_Max":
+                                        Temp.Add(runNumber, mudItem.Item(k).InnerText);
+                                        break;
+                                    case "Rm_At_Temp_Max":
+                                        Rm.Add(runNumber, CalculateRmfc(mudItem.Item(k).InnerText));
+                                        Rmf.Add(runNumber, CalculateRmfc(mudItem.Item(k).InnerText, "rmf"));
+                                        Rmc.Add(runNumber, CalculateRmfc(mudItem.Item(k).InnerText, "rmc"));
+                                        RmMaxTemp.Add(runNumber, CalculateRmfc(mudItem.Item(k).InnerText, "rmMaxTemp", runNumber));
+                                        break;
+                                }
                             }
                             FunelViscosity.Add(runNumber, Math.Max(funnelViscosityStart, funnelViscosityEnd));
                             Oil.Add(runNumber, Math.Max(oilStart, oilEnd));
@@ -534,7 +540,10 @@ namespace FinalLog
                             {
                                 if (hydraulics.Item(k).Name == "Flow_Rate")
                                 {
-                                    FlowRateRuns.Add(runNumber, double.Parse(hydraulics.Item(k).InnerText) * 3.7854);
+                                    if(hydraulics.Item(k).InnerText == "")
+                                        FlowRateRuns.Add(runNumber, 0);
+                                    else
+                                        FlowRateRuns.Add(runNumber, double.Parse(hydraulics.Item(k).InnerText) * 3.7854);
                                 }
                             }
                             break;
@@ -932,6 +941,8 @@ namespace FinalLog
 
         private string CalculateRmfc(string rm, string str = "rm", string run = "")
         {
+            if (rm == "0")
+                rm = "0.00@20";
             string[] splitStr = rm.Split('@');
             if (splitStr[0] == "" || splitStr[0].StartsWith("0.00"))
             {
@@ -1014,6 +1025,19 @@ namespace FinalLog
                 
             }
 
+        }
+
+        private void ErrorsInRuns(string run, string field)
+        {
+            ErrorsInRunsDict.Add(field, run);
+        }
+
+        private void ItemsInRuns(string item, string run, string itemValue)
+        {
+            if (ItemsDict.ContainsKey(item))
+            {
+                ItemsDict[item].Add(run, itemValue);
+            }
         }
     }
 }

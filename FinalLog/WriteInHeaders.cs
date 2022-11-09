@@ -111,14 +111,6 @@ namespace FinalLog
                 workbook.Close(true);
                 application.Quit();
             }
-            finally 
-            {
-                if (application.Visible == false)
-                {
-                    workbook.Close(true);
-                    application.Quit();
-                }
-            }
 
         }
     }

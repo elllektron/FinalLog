@@ -20,7 +20,7 @@ namespace FinalLog
     public partial class MainWindow : Window
     {
         //Версия программы
-        private readonly string  version = "v1.2.0";
+        private readonly string  version = "v1.2.1";
         private bool checkVersion;
        
         private XmlDocument xmlDocument = new();
@@ -282,7 +282,7 @@ namespace FinalLog
 
             catch (WebException we)
             {
-                statusText.Text = ((HttpWebResponse)we.Response).StatusCode.ToString();
+                statusText.Text = "Проверьте подключение к интернету";//((HttpWebResponse)we.Response).StatusCode.ToString();
             }
             return false;
         }
