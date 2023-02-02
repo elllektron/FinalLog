@@ -12,16 +12,17 @@ namespace FinalLogUpdater
 
             string currentDir = Directory.GetCurrentDirectory();
             string path = $"{currentDir}\\FinalLogNew.zip";
-            //string pathZip = $"{ currentDir}\\NewFinalLog";
+
             FileInfo file = new(path);
             if (file.Exists)
             {
                 Process[] proc = Process.GetProcessesByName("FinalLog");
                 proc[0].Kill();
-                System.Threading.Thread.Sleep(1000);
+                
                 ZipFile.ExtractToDirectory(path, currentDir, true);
+                System.Threading.Thread.Sleep(3000);
                 File.Delete(path);
-
+                
                 //Запускаем новый процесс
                 Process isStartProcess = new();
                 //Получаем папку в которой находится программа

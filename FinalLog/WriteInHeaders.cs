@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Windows;
 using System.Xml;
 
 namespace FinalLog
@@ -22,7 +23,8 @@ namespace FinalLog
         private readonly bool _check;
         private string statusString = "";
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        private string updateVersionTextCaption = "Проверьте правильность заполнения CORE";
+        private string textBoxMessage = "";
 
         public WriteInHeaders(string wellName, List<string> runs,
             XmlDocument coreFile, string wellType, string mudType,
@@ -70,47 +72,68 @@ namespace FinalLog
                     fullPath += temp[i] + "\\";
                 }
             }
-            Application application = new();
 
-
-            statusString = "Открываем файл excel";
-            _worker.ReportProgress(15, statusString);
-
-            Workbook workbook = application.Workbooks as Workbook;
-            try
+            if (data.ErrorsInRunsDict.Count > 0)
             {
-                workbook = application.Workbooks.Open(fullPath);
-
-                statusString = "Заполняем Header Info";
-                _worker.ReportProgress(30, statusString);
-                HeaderInfo header = new(workbook, data, _check);
-
-                statusString = "Заполняем Run Summary";
-                _worker.ReportProgress(45, statusString);
-                RunSum runSum = new(workbook, data, _activity, _customerName);
-
-                statusString = "Заполняем Equipment Summary";
-                _worker.ReportProgress(60, statusString);
-                EquipmentSum equipSum = new(workbook, data);
-
-                statusString = "Заполняем Mud Summary";
-                _worker.ReportProgress(75, statusString);
-                MudSum mudSum = new(workbook, data);
-
-                statusString = "Заполняем LWD Remarks";
-                _worker.ReportProgress(90, statusString);
-
-                application.Visible = true;
+                foreach (var runErrors in data.ErrorsInRunsDict)
+                {
+                    string errorList = "";
+                    for ( var i = 0; i < runErrors.Value.Count; i++)
+                    {
+                        errorList += string.Format("{0}, ", runErrors.Value[i]);
+                    }
+                    textBoxMessage += string.Format("Номер рейса: {0} - Ошибки: {1}\n", runErrors.Key, errorList);
+                }
+                MessageBoxButton buttonOK = MessageBoxButton.OK;
+                MessageBoxResult result = MessageBox.Show(textBoxMessage, updateVersionTextCaption, buttonOK);
 
             }
-            catch(Exception ex)
+
+            else
             {
-                log.Error(ex);
-                statusString = "Не удается найти файл excel";
-                _worker.ReportProgress(100, statusString);
-                workbook.Close(true);
-                application.Quit();
+                Microsoft.Office.Interop.Excel.Application application = new();
+
+
+                statusString = "Открываем файл excel";
+                _worker.ReportProgress(15, statusString);
+
+                Workbook workbook = application.Workbooks as Workbook;
+                try
+                {
+                    workbook = application.Workbooks.Open(fullPath);
+
+                    statusString = "Заполняем Header Info";
+                    _worker.ReportProgress(30, statusString);
+                    HeaderInfo header = new(workbook, data, _check);
+
+                    statusString = "Заполняем Run Summary";
+                    _worker.ReportProgress(45, statusString);
+                    RunSum runSum = new(workbook, data, _activity, _customerName);
+
+                    statusString = "Заполняем Equipment Summary";
+                    _worker.ReportProgress(60, statusString);
+                    EquipmentSum equipSum = new(workbook, data);
+
+                    statusString = "Заполняем Mud Summary";
+                    _worker.ReportProgress(75, statusString);
+                    MudSum mudSum = new(workbook, data);
+
+                    statusString = "Заполняем LWD Remarks";
+                    _worker.ReportProgress(90, statusString);
+
+                    application.Visible = true;
+
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    statusString = "Не удается найти файл excel";
+                    _worker.ReportProgress(100, statusString);
+                    workbook.Close(true);
+                    application.Quit();
+                }
             }
+            
 
         }
     }

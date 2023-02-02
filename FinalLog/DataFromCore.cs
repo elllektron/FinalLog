@@ -49,13 +49,7 @@ namespace FinalLog
             "Density Insert"
         };
 
-        private List<string> ItemsAndDictName = new()
-        {
-            "Density_Max" ,
-            "Funnel_Viscosity_Start",
 
-
-        };
 
 
         //Свойства из конструктора
@@ -146,7 +140,7 @@ namespace FinalLog
         public Dictionary<string, SortedDictionary<double, List<string>>> DailyMudSum { get; set; } = new Dictionary<string, SortedDictionary<double, List<string>>>();
 
         //Ошибки в заполнении файла Core
-        public Dictionary<string, string> ErrorsInRunsDict { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, List<string>> ErrorsInRunsDict { get; set; } = new Dictionary<string, List<string>>();
 
         public Dictionary<string, Dictionary<string, string>> ItemsDict { get; set; } = new Dictionary<string, Dictionary<string, string>>();
 
@@ -173,7 +167,7 @@ namespace FinalLog
             GetHolesizeofDepth();
             GetDataFromCurrentRuns();
             CasingShoeDepthCompare();
-
+            ErrorsInRuns();
         }
 
         private void GetDataFromLWDJob()
@@ -228,21 +222,25 @@ namespace FinalLog
         {
             var runs = _coreFile.GetElementsByTagName("Run");
 
+            /*List<string> itemsEmpytLsit = new();*/
             for (int i = 0; i < runs.Count; i++)
             {
                 var runItems = runs.Item(i).ChildNodes;
                 bool flag = true;
                 string runNumber = "";
+                List<string> itemsEmpytLsit = new();
+
                 for (int j = 0; j < runItems.Count; j++)
                 {
                     var item = runItems.Item(j).InnerText;
-
+                    
                     switch (runItems.Item(j).Name)
                     {
                         case "Run_Number":
                             if (item.Length < 3)
                             {
                                 runNumber = item;
+                                
                                 flag = true;
                             }
                             else
@@ -265,9 +263,15 @@ namespace FinalLog
                             EndDepthRuns.Add(runNumber, double.Parse(item, CultureInfo.InvariantCulture) / feetToMeter);
                             break;
                         case "Circ_Hrs":
-                                Circulation.Add(runNumber, item);
+                            if (string.IsNullOrEmpty(item))
+                                itemsEmpytLsit.Add("Circ_Hrs");
+                            else
+                                Circulation.Add(runNumber, item);  
                             break;
                         case "Drill_Hrs":
+                            if (string.IsNullOrEmpty(item))
+                                itemsEmpytLsit.Add("Drill_Hrs");
+                            else
                                 DrillingHours.Add(runNumber, item);
                             break;
                         case "Engineers_On_Duty":
@@ -296,21 +300,34 @@ namespace FinalLog
                             {
                                 if (bit.Item(k).Name == "Size")
                                 {
-                                    holeSize = double.Parse(bit.Item(k).InnerText);
-                                    HoleSizeRuns.Add(runNumber, Math.Round(holeSize * feetToMillimeter, 1)); 
+                                    if (string.IsNullOrEmpty(bit.Item(k).InnerText))
+                                        itemsEmpytLsit.Add("HoleSize");
+                                    else
+                                    {
+                                        holeSize = double.Parse(bit.Item(k).InnerText);
+                                        HoleSizeRuns.Add(runNumber, Math.Round(holeSize * feetToMillimeter, 1));
+                                    }
+                                    
                                 }
 
                                 if (bit.Item(k).Name == "TFA")
                                 {
-                                    if (bit.Item(k).InnerText != "")
+                                    if (!string.IsNullOrEmpty(bit.Item(k).InnerText))
                                         _nozzlessSquare.Add(runNumber, Math.Pow(Math.Sqrt(double.Parse(bit.Item(k).InnerText)) * inchToMillimeter, 2));
                                     else
+                                    {
                                         _nozzlessSquare.Add(runNumber, 0);
+                                        itemsEmpytLsit.Add("TFA");
+                                    }
+                                        
                                 }
 
                                 if (bit.Item(k).Name == "Type")
                                 {
-                                    _bitType.Add(runNumber, bit.Item(k).InnerText);
+                                    if (string.IsNullOrEmpty(bit.Item(k).InnerText))
+                                        itemsEmpytLsit.Add(bit.Item(k).InnerText);
+                                    else
+                                        _bitType.Add(runNumber, bit.Item(k).InnerText);
                                 }
                             }
                             break;
@@ -322,11 +339,15 @@ namespace FinalLog
                                 switch (survItem.Item(k).Name)
                                 {
                                     case "Casing_Shoe":
-                                        if (survItem.Item(k).InnerText != "" && survItem.Item(k).InnerText != "0")
+                                        if (string.IsNullOrEmpty(survItem.Item(k).InnerText))
+                                            itemsEmpytLsit.Add("Casing_Shoe");
+
+                                        else if (survItem.Item(k).InnerText != "" && survItem.Item(k).InnerText != "0")
                                         {
                                             if (!CasingShoeDepth.Contains(double.Parse(survItem.Item(k).InnerText) / feetToMeter))
                                                 CasingShoeDepth.Add(double.Parse(survItem.Item(k).InnerText) / feetToMeter);
                                         }
+                                        
                                         break;
 
                                     case "Max_Inc":
@@ -436,7 +457,9 @@ namespace FinalLog
                             {
                                 if (bha.Item(k).Name == "Type")
                                 {
-                                    if (bha.Item(k).InnerText == "Steerable")
+                                    if (string.IsNullOrEmpty(bha.Item(k).InnerText))
+                                        itemsEmpytLsit.Add("BHA_Type");
+                                    else if (bha.Item(k).InnerText == "Steerable")
                                     {
                                         if (!BHAType.ContainsKey(runNumber))
                                             BHAType.Add(runNumber, "ННБ");
@@ -448,6 +471,7 @@ namespace FinalLog
                                     }
 
                                 }
+                                //Элементы КНБК
                                 if (bha.Item(k).Name == "BHA_Part")
                                 {
                                     var bhaPart = bha.Item(k).ChildNodes;
@@ -455,7 +479,10 @@ namespace FinalLog
                                     {
                                         if (bhaPart.Item(l).Name == "Length")
                                         {
-                                            totalLengh += double.Parse(bhaPart.Item(l).InnerText) / feetToMeter;
+                                            if (string.IsNullOrEmpty(bhaPart.Item(l).InnerText))
+                                                itemsEmpytLsit.Add("BHA_Length");
+                                            else
+                                                totalLengh += double.Parse(bhaPart.Item(l).InnerText) / feetToMeter;
                                         }
                                     }
                                 }
@@ -518,15 +545,24 @@ namespace FinalLog
                                     {
                                         if (sensorsOffsets.Item(l).Name == "SerialNumber")
                                         {
-                                            tempKey = sensorsOffsets.Item(l).InnerText;
+                                            if (string.IsNullOrEmpty(sensorsOffsets.Item(l).InnerText))
+                                                itemsEmpytLsit.Add("SerialNumber_Tool");
+                                            else
+                                                tempKey = sensorsOffsets.Item(l).InnerText;
                                         }
                                         if (sensorsOffsets.Item(l).Name == "Offset")
                                         {
-                                            tempVaue = (double.Parse(sensorsOffsets.Item(l).InnerText) * feetToMillimeter).ToString("0.00");
+                                            if (string.IsNullOrEmpty(sensorsOffsets.Item(l).InnerText))
+                                                itemsEmpytLsit.Add("Offset");
+                                            else
+                                                tempVaue = (double.Parse(sensorsOffsets.Item(l).InnerText) * feetToMillimeter).ToString("0.00");
                                         }
                                         if (sensorsOffsets.Item(l).Name == "Rate")
                                         {
-                                            tempVaue = tempVaue + " / " + sensorsOffsets.Item(l).InnerText;
+                                            if (string.IsNullOrEmpty(sensorsOffsets.Item(l).InnerText))
+                                                itemsEmpytLsit.Add("Rate");
+                                            else
+                                                tempVaue = tempVaue + " / " + sensorsOffsets.Item(l).InnerText;
                                         }
                                     }
                                     tempDictOffsets.Add(tempKey, tempVaue);
@@ -582,8 +618,14 @@ namespace FinalLog
                                             }
                                             if (mudDataDailys.Item(day).Name == "Bore_Hole_Temp_Start")
                                             {
-                                                string dailyTemp = FarenheitToCelsius(mudDataDailys.Item(day).InnerText);
-                                                tempList.Add(dailyTemp);
+                                                if (string.IsNullOrEmpty(mudDataDailys.Item(day).InnerText))
+                                                    itemsEmpytLsit.Add(mudDataDailys.Item(day).InnerText);
+                                                else
+                                                {
+                                                    string dailyTemp = FarenheitToCelsius(mudDataDailys.Item(day).InnerText);
+                                                    tempList.Add(dailyTemp);
+                                                }
+                                                
                                             }
                                         }
                                     }
@@ -619,7 +661,14 @@ namespace FinalLog
                         default:
                             break;
                     }
+                    
                     if (!flag) break;
+
+                }
+                if (itemsEmpytLsit.Count > 0)
+                {
+                    ErrorsInRunsDict.Add(runNumber, itemsEmpytLsit);
+
                 }
             }
         }
@@ -1015,7 +1064,7 @@ namespace FinalLog
                 {
                     for (int i = 0; i < tempList.Count; i++)
                     {
-                        if (item.Key == tempList[i])
+                        if (item.Key == tempList[i] && CasingShoeDepth.Count > 0)
                         {
                             CasingShoeDepthDict.Add(item.Value, CasingShoeDepth[i]);
                             break;
@@ -1027,9 +1076,12 @@ namespace FinalLog
 
         }
 
-        private void ErrorsInRuns(string run, string field)
+        private bool ErrorsInRuns()
         {
-            ErrorsInRunsDict.Add(field, run);
+            if (ErrorsInRunsDict.Count > 0)
+                return true;
+            return false;
+            
         }
 
         private void ItemsInRuns(string item, string run, string itemValue)

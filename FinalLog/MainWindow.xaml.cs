@@ -20,7 +20,7 @@ namespace FinalLog
     public partial class MainWindow : Window
     {
         //Версия программы
-        private readonly string  version = "v1.2.1";
+        private readonly string  version = "v1.2.2";
         private bool checkVersion;
        
         private XmlDocument xmlDocument = new();
@@ -78,7 +78,7 @@ namespace FinalLog
 
             Process[] procFinalLog = Process.GetProcessesByName("FinalLogUpdater");
             if (procFinalLog.Length != 0)
-                //Если запущена останавливаем её
+                //Если запущен останавливаем
                 procFinalLog[0].Kill();
 
             //Устанавливаем версию в title
@@ -266,13 +266,13 @@ namespace FinalLog
                         loadWindow.CheckUpdateProgram(newVersion);
                         loadWindow.ShowDialog();
 
+
                         //Запускаем новый процесс
                         Process isStartProcess = new();
                         //Получаем папку в которой находится программа
                         string currentDirectory = Directory.GetCurrentDirectory();
                         //Выбираем программу для запуска
                         isStartProcess.StartInfo.FileName = $"{currentDirectory}\\FinalLogUpdater.exe";
-
                         isStartProcess.Start();
                     }
                     return true;
