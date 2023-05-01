@@ -1,12 +1,12 @@
 ﻿using Microsoft.Office.Interop.Excel;
 
+
 namespace FinalLog
 {
     class MudSum
     {
         private readonly Workbook _workbook;
         private readonly DataFromCore _data;
-
 
         public MudSum(Workbook workbook, DataFromCore data)
         {
@@ -42,12 +42,25 @@ namespace FinalLog
                     worksheet.Cells[5 + j, 7] = _data.RunNumbers[i];
                     //KCL
                     worksheet.Cells[5 + j, 11] = _data.KCL[_data.RunNumbers[i]];
-                    //Rm
-                    worksheet.Cells[5 + j, 13] = _data.Rm[_data.RunNumbers[i]];
-                    //Rmf
-                    worksheet.Cells[5 + j, 16] = _data.Rmf[_data.RunNumbers[i]];
-                    //Rmc
-                    worksheet.Cells[5 + j, 19] = _data.Rmc[_data.RunNumbers[i]];
+                    if (_data.MudType != "РУО")
+                    {
+                        //Rm
+                        worksheet.Cells[5 + j, 13] = _data.Rm[_data.RunNumbers[i]];
+                        //Rmf
+                        worksheet.Cells[5 + j, 16] = _data.Rmf[_data.RunNumbers[i]];
+                        //Rmc
+                        worksheet.Cells[5 + j, 19] = _data.Rmc[_data.RunNumbers[i]];
+                    }
+                    else
+                    {
+                        //Rm
+                        worksheet.Cells[5 + j, 13] = "n/a";
+                        //Rmf
+                        worksheet.Cells[5 + j, 16] = "n/a";
+                        //Rmc
+                        worksheet.Cells[5 + j, 19] = "n/a";
+                    }
+                   
                     //Температура
                     worksheet.Cells[5 + j, 22] = item.Value[2];
                     j += 2;

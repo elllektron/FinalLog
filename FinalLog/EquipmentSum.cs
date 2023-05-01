@@ -42,7 +42,7 @@ namespace FinalLog
                         worksheet.Cells[6, 2 + i] = item.Key;
                     if (item.Value == "HAGR")
                         worksheet.Cells[7, 2 + i] = item.Key;
-                    if (item.Value == "MFR Collar")
+                    if (item.Value == "MFR Collar" || item.Value == "Azimuthal MFR (GWAR)")
                         worksheet.Cells[8, 2 + i] = item.Key;
                     if (item.Value == "Neutron Insert")
                         worksheet.Cells[9, 2 + i] = item.Key;

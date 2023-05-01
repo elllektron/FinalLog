@@ -6,6 +6,8 @@ namespace FinalLog
 {
     class RunSum
     {
+        private const string MUD_NA = "n/a";
+
         private readonly Workbook _workbook;
         private readonly DataFromCore _data;
         private readonly string _activity;
@@ -102,9 +104,11 @@ namespace FinalLog
                     if (_data.MudType == "РУО")
                     {
                         //Сопративление раствора
-                        worksheet.Cells[27, 3 + i] = "-";
-                        worksheet.Cells[28, 3 + i] = "-";
-                        worksheet.Cells[29, 3 + i] = "-";
+                        worksheet.Cells[27, 3 + i] = MUD_NA;
+                        worksheet.Cells[28, 3 + i] = MUD_NA;
+                        worksheet.Cells[29, 3 + i] = MUD_NA;
+                        //Сопротивление при максимальной температуре
+                        worksheet.Cells[31, 3 + i] = MUD_NA;
                     }
                     else
                     {
@@ -112,12 +116,13 @@ namespace FinalLog
                         worksheet.Cells[27, 3 + i] = _data.Rm[_data.RunNumbers[i]];
                         worksheet.Cells[28, 3 + i] = _data.Rmf[_data.RunNumbers[i]];
                         worksheet.Cells[29, 3 + i] = _data.Rmc[_data.RunNumbers[i]];
+                        //Сопротивление при максимальной температуре
+                        worksheet.Cells[31, 3 + i] = _data.RmMaxTemp[_data.RunNumbers[i]];
                     }
                     worksheet.Cells[26, 3 + i] = $"{oil} / {water}";
                     //Температура раствора
                     worksheet.Cells[30, 3 + i] = _data.Temp[_data.RunNumbers[i]];
-                    //Сопротивление при максимальной температуре
-                    worksheet.Cells[31, 3 + i] = _data.RmMaxTemp[_data.RunNumbers[i]];
+                    
                     //Содержание KCL 
                     worksheet.Cells[32, 3 + i] = _data.KCL[_data.RunNumbers[i]];
                     //Представитель заказчика

@@ -42,6 +42,7 @@ namespace FinalLog
             "Pulser (AES)",
             "Driver Insert",
             "MFR Collar",
+            "Azimuthal MFR (GWAR)",
             "HAGR",
             "Am-241Be Source",
             "Neutron Insert",
@@ -325,7 +326,7 @@ namespace FinalLog
                                 if (bit.Item(k).Name == "Type")
                                 {
                                     if (string.IsNullOrEmpty(bit.Item(k).InnerText))
-                                        itemsEmpytLsit.Add(bit.Item(k).InnerText);
+                                        itemsEmpytLsit.Add("Bit_Type");
                                     else
                                         _bitType.Add(runNumber, bit.Item(k).InnerText);
                                 }
@@ -619,7 +620,7 @@ namespace FinalLog
                                             if (mudDataDailys.Item(day).Name == "Bore_Hole_Temp_Start")
                                             {
                                                 if (string.IsNullOrEmpty(mudDataDailys.Item(day).InnerText))
-                                                    itemsEmpytLsit.Add(mudDataDailys.Item(day).InnerText);
+                                                    itemsEmpytLsit.Add("Bore_Hole_Temp_Start");
                                                 else
                                                 {
                                                     string dailyTemp = FarenheitToCelsius(mudDataDailys.Item(day).InnerText);
