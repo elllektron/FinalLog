@@ -991,6 +991,10 @@ namespace FinalLog
 
         private string CalculateRmfc(string rm, string str = "rm", string run = "")
         {
+            if(rm == "OBM")
+            {
+                return "n/a";
+            }
             if (rm == "0")
                 rm = "0.00@20";
             string[] splitStr = rm.Split('@');
