@@ -16,6 +16,7 @@ namespace FinalLog
         private readonly XmlDocument _coreFile;
         private readonly string _wellType;
         private readonly string _mudType;
+        private readonly string _kcl;
         private readonly string _activity;
         private readonly string _customerName;
         private readonly string _company;
@@ -28,13 +29,15 @@ namespace FinalLog
 
         public WriteInHeaders(string wellName, List<string> runs,
             XmlDocument coreFile, string wellType, string mudType,
-            string activity, string customerName, string company, BackgroundWorker worker, bool check)
+            string kcl, string activity, string customerName, string company, 
+            BackgroundWorker worker, bool check)
         {
             _wellName = wellName;
             _runs = runs;
             _coreFile = coreFile;
             _wellType = wellType;
             _mudType = mudType;
+            _kcl = kcl;
             _activity = activity;
             _customerName = customerName;
             _company = company;
@@ -108,7 +111,7 @@ namespace FinalLog
 
                     statusString = "Заполняем Run Summary";
                     _worker.ReportProgress(45, statusString);
-                    RunSum runSum = new(workbook, data, _activity, _customerName);
+                    RunSum runSum = new(workbook, data, _activity, _customerName, _kcl);
 
                     statusString = "Заполняем Equipment Summary";
                     _worker.ReportProgress(60, statusString);
@@ -116,7 +119,7 @@ namespace FinalLog
 
                     statusString = "Заполняем Mud Summary";
                     _worker.ReportProgress(75, statusString);
-                    MudSum mudSum = new(workbook, data);
+                    MudSum mudSum = new(workbook, data, _kcl);
 
                     statusString = "Заполняем LWD Remarks";
                     _worker.ReportProgress(90, statusString);

@@ -20,7 +20,7 @@ namespace FinalLog
     public partial class MainWindow : Window
     {
         //Версия программы
-        private readonly string  version = "v1.2.4";
+        private readonly string  version = "v1.2.5";
         private bool checkVersion;
        
         private XmlDocument xmlDocument = new();
@@ -68,6 +68,7 @@ namespace FinalLog
         public string CustomerName { get; set; }
         public string Company { get; set; }
         public bool Check { get; set; }
+        public string KCl { get; set; }
 
 
         public MainWindow()
@@ -176,6 +177,7 @@ namespace FinalLog
                     Activity = activity.SelectedItem.ToString();
                     CustomerName = customerName.Text;
                     Company = company.SelectedItem.ToString();
+                    KCl = kcl.Text;
 
                     BackgroundWorker worker = new();
                     worker.WorkerReportsProgress = true;
@@ -210,7 +212,9 @@ namespace FinalLog
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             
-            _ = new WriteInHeaders(WellName, RunNumbers, xmlDocument, WellType, MudType, Activity, CustomerName, Company, sender as BackgroundWorker, Check);
+            _ = new WriteInHeaders(WellName, RunNumbers, xmlDocument, WellType, 
+                MudType, KCl, Activity, CustomerName, 
+                Company, sender as BackgroundWorker, Check);
 
             (sender as BackgroundWorker).ReportProgress(100, "Сохраняем результаты");
         }

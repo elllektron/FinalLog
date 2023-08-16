@@ -597,7 +597,8 @@ namespace FinalLog
                                     {
                                         string tempDate = dailies.Item(k).ChildNodes.Item(l).InnerText;
                                         tempList.Add(tempDate);
-                                        if(k == dailies.Count - 2)
+                                        
+                                        if(k == dailies.Count - 2 || dailies.Count - 2 < 0)
                                         {
                                             EndDateRuns.Add(runNumber, tempDate);
                                         }
@@ -641,6 +642,8 @@ namespace FinalLog
                                         if (dailies.Item(k).ChildNodes.Item(l).Name == "Oper_Hrs")
                                         {
                                             StartTimeRuns.Add(runNumber, TimeConverter(dailies.Item(k).ChildNodes.Item(l).InnerText, true));
+                                            if (dailies.Count - 1 == 0)
+                                                EndTimeRuns.Add(runNumber, TimeConverter(dailies.Item(k).ChildNodes.Item(l).InnerText, false));
                                         }
 
                                     }

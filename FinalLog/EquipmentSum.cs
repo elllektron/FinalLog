@@ -29,6 +29,11 @@ namespace FinalLog
             {
                 // номера рейсов
                 worksheet.Cells[2, 2 + i] = _data.RunNumbers[i];
+                if (!_data.Tools[_data.RunNumbers[i]].ContainsKey("IDS2"))
+                {
+                    worksheet.Cells[4, 2 + i] = "-";
+                    worksheet.Cells[18, 2 + i] = "-";
+                }
 
                 foreach (var item in _data.Tools[_data.RunNumbers[i]])
                 {
@@ -36,6 +41,7 @@ namespace FinalLog
                         worksheet.Cells[3, 2 + i] = item.Key;
                     if (item.Value == "IDS2")
                         worksheet.Cells[4, 2 + i] = item.Key;
+
                     if (item.Value == "Driver Insert")
                         worksheet.Cells[5, 2 + i] = item.Key;
                     if (item.Value == "Pulser (AES)")

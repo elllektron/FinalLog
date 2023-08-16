@@ -12,14 +12,17 @@ namespace FinalLog
         private readonly DataFromCore _data;
         private readonly string _activity;
         private readonly string _customerName;
+        private readonly string _kcl;
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public RunSum(Workbook workbook, DataFromCore data, string activity, string customerName)
+        public RunSum(Workbook workbook, DataFromCore data, string activity, string customerName, string kcl)
         {
             _workbook = workbook;
             _data = data;
             _activity = activity;
             _customerName = customerName;
+            _kcl = kcl;
             CompleteRunSum();
+            
         }
 
         private void CompleteRunSum()
@@ -124,7 +127,7 @@ namespace FinalLog
                     worksheet.Cells[30, 3 + i] = _data.Temp[_data.RunNumbers[i]];
                     
                     //Содержание KCL 
-                    worksheet.Cells[32, 3 + i] = _data.KCL[_data.RunNumbers[i]];
+                    worksheet.Cells[32, 3 + i] = _kcl;
                     //Представитель заказчика
                     worksheet.Cells[33, 3 + i] = _customerName;
                     //Инженер WFT

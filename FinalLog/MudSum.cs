@@ -7,11 +7,13 @@ namespace FinalLog
     {
         private readonly Workbook _workbook;
         private readonly DataFromCore _data;
+        private readonly string _kcl;
 
-        public MudSum(Workbook workbook, DataFromCore data)
+        public MudSum(Workbook workbook, DataFromCore data, string kcl)
         {
             _workbook = workbook;
             _data = data;
+            _kcl = kcl;
 
             CompleteMudSum();
         }
@@ -41,7 +43,9 @@ namespace FinalLog
                     //номер рейса
                     worksheet.Cells[5 + j, 7] = _data.RunNumbers[i];
                     //KCL
-                    worksheet.Cells[5 + j, 11] = _data.KCL[_data.RunNumbers[i]];
+                    worksheet.Cells[5 + j, 11] = _kcl;
+
+                    //Сопративление
                     if (_data.MudType != "РУО")
                     {
                         //Rm
