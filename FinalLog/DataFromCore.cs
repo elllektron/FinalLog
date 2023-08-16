@@ -104,7 +104,6 @@ namespace FinalLog
         public Dictionary<string, string> Rmc { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> Temp { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> RmMaxTemp { get; set; } = new Dictionary<string, string>();
-        public Dictionary<string, string> KCL { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, double> FunelViscosity { get; set; } = new Dictionary<string, double>();
         public Dictionary<string, double> Oil { get; set; } = new Dictionary<string, double>();
         public Dictionary<string, double> PV { get; set; } = new Dictionary<string, double>();
@@ -427,9 +426,6 @@ namespace FinalLog
                                         break;
                                     case "pH_End":
                                         phEnd = double.Parse(mudItem.Item(k).InnerText);
-                                        break;
-                                    case "KCl_Max":
-                                        KCL.Add(runNumber, mudItem.Item(k).InnerText);
                                         break;
                                     case "Total_Chlorides_Max":
                                         Chlorides.Add(runNumber, mudItem.Item(k).InnerText);
